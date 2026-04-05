@@ -1,0 +1,3732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS% League Viewer — 2025-26</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0d1117; --bg2: #161b22; --border: #30363d; --text: #c9d1d9;
+  --text-bright: #e6edf3; --text-dim: #8b949e; --accent: #58a6ff;
+  --accent2: #1f6feb; --row-hover: #161b22; --row-alt: rgba(255,255,255,0.02);
+  --pure-color: #3fb950; --delta-neg: #f85149; --delta-pos: #3fb950;
+  --canvas-bg: #0d1117; --grid: #21262d; --input-bg: #0d1117;
+}
+body.theme-light {
+  --bg: #ffffff; --bg2: #f6f8fa; --border: #d0d7de; --text: #1f2328;
+  --text-bright: #1f2328; --text-dim: #656d76; --accent: #0969da;
+  --accent2: #0550ae; --row-hover: #f6f8fa; --row-alt: rgba(0,0,0,0.02);
+  --pure-color: #1a7f37; --delta-neg: #cf222e; --delta-pos: #1a7f37;
+  --canvas-bg: #ffffff; --grid: #e8e8e8; --input-bg: #ffffff;
+}
+body.theme-midnight {
+  --bg: #000000; --bg2: #0a0a0a; --border: #222222; --text: #e0e0e0;
+  --text-bright: #ffffff; --text-dim: #777777; --accent: #6cb6ff;
+  --accent2: #388bfd; --row-hover: #0a0a0a; --row-alt: rgba(255,255,255,0.03);
+  --canvas-bg: #000000; --grid: #1a1a1a; --input-bg: #0a0a0a;
+}
+body.theme-dark-green {
+  --bg: #0a1a0a; --bg2: #0f250f; --border: #1e3a1e; --text: #b8d4b8;
+  --text-bright: #d4eed4; --text-dim: #6a8f6a; --accent: #4ae04a;
+  --accent2: #2ea02e; --row-hover: #0f250f; --row-alt: rgba(74,224,74,0.02);
+  --canvas-bg: #0a1a0a; --grid: #152815; --input-bg: #0a1a0a;
+}
+body.theme-dark-blue {
+  --bg: #0a0e1a; --bg2: #0f1525; --border: #1e2a3e; --text: #b8c8d4;
+  --text-bright: #d4e4f4; --text-dim: #6a7f8f; --accent: #4a9ee0;
+  --accent2: #2e70a0; --row-hover: #0f1525; --row-alt: rgba(74,158,224,0.02);
+  --canvas-bg: #0a0e1a; --grid: #152035; --input-bg: #0a0e1a;
+}
+body.theme-light-blue {
+  --bg: #e8f0fe; --bg2: #d4e4f8; --border: #a8c4e0; --text: #1a2a3a;
+  --text-bright: #0a1a2a; --text-dim: #4a6a8a; --accent: #1a56db;
+  --accent2: #0d3b96; --row-hover: #d4e4f8; --row-alt: rgba(0,0,0,0.03);
+  --canvas-bg: #e8f0fe; --grid: #c8d8ee; --input-bg: #ffffff;
+}
+body.theme-solarized-dark {
+  --bg: #002b36; --bg2: #073642; --border: #586e75; --text: #839496;
+  --text-bright: #93a1a1; --text-dim: #657b83; --accent: #268bd2;
+  --accent2: #2aa198; --row-hover: #073642; --row-alt: rgba(255,255,255,0.02);
+  --canvas-bg: #002b36; --grid: #073642; --input-bg: #073642;
+}
+body.theme-solarized-light {
+  --bg: #fdf6e3; --bg2: #eee8d5; --border: #93a1a1; --text: #657b83;
+  --text-bright: #586e75; --text-dim: #93a1a1; --accent: #268bd2;
+  --accent2: #2aa198; --row-hover: #eee8d5; --row-alt: rgba(0,0,0,0.02);
+  --canvas-bg: #fdf6e3; --grid: #eee8d5; --input-bg: #fdf6e3;
+}
+body.theme-monokai {
+  --bg: #272822; --bg2: #2e2f2a; --border: #49483e; --text: #f8f8f2;
+  --text-bright: #f8f8f2; --text-dim: #75715e; --accent: #a6e22e;
+  --accent2: #66d9ef; --row-hover: #2e2f2a; --row-alt: rgba(255,255,255,0.02);
+  --canvas-bg: #272822; --grid: #3e3d32; --input-bg: #272822;
+}
+body.theme-nord {
+  --bg: #2e3440; --bg2: #3b4252; --border: #4c566a; --text: #d8dee9;
+  --text-bright: #eceff4; --text-dim: #7b88a1; --accent: #88c0d0;
+  --accent2: #81a1c1; --row-hover: #3b4252; --row-alt: rgba(255,255,255,0.02);
+  --canvas-bg: #2e3440; --grid: #3b4252; --input-bg: #3b4252;
+}
+body.theme-dracula {
+  --bg: #282a36; --bg2: #343746; --border: #44475a; --text: #f8f8f2;
+  --text-bright: #f8f8f2; --text-dim: #6272a4; --accent: #bd93f9;
+  --accent2: #ff79c6; --row-hover: #343746; --row-alt: rgba(255,255,255,0.02);
+  --canvas-bg: #282a36; --grid: #3a3c4e; --input-bg: #282a36;
+}
+body.theme-sepia {
+  --bg: #f4ecd8; --bg2: #e8dcc8; --border: #c4b8a0; --text: #5b4636;
+  --text-bright: #3a2a1a; --text-dim: #8a7a6a; --accent: #8b4513;
+  --accent2: #a0522d; --row-hover: #e8dcc8; --row-alt: rgba(0,0,0,0.02);
+  --canvas-bg: #f4ecd8; --grid: #ddd0b8; --input-bg: #f4ecd8;
+}
+body.theme-high-contrast {
+  --bg: #000000; --bg2: #0a0a0a; --border: #ffffff; --text: #ffffff;
+  --text-bright: #ffffff; --text-dim: #cccccc; --accent: #ffff00;
+  --accent2: #00ffff; --row-hover: #1a1a1a; --row-alt: rgba(255,255,255,0.05);
+  --canvas-bg: #000000; --grid: #333333; --input-bg: #0a0a0a;
+}
+body.theme-nba-dark {
+  --bg: #0c1220; --bg2: #121c30; --border: #1d3461; --text: #c8d0dc;
+  --text-bright: #e8ecf0; --text-dim: #6878a0; --accent: #c9082a;
+  --accent2: #1d428a; --row-hover: #121c30; --row-alt: rgba(29,66,138,0.05);
+  --canvas-bg: #0c1220; --grid: #1a2840; --input-bg: #0c1220;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24px;
+}
+
+h1 { font-size: 22px; font-weight: 600; color: var(--text-bright); margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+
+/* Floating tooltip */
+.tooltip-float {
+  position: fixed;
+  background: var(--bg2);
+  color: var(--text-bright);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+  line-height: 1.4;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #444c56;
+  max-width: 320px;
+  min-width: 180px;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: none;
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+.tab-bar button {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--text-dim); font-size: 14px; font-weight: 500; padding: 10px 20px;
+  cursor: pointer; transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: var(--text-bright); }
+.tab-bar button.active { color: var(--text-bright); border-bottom-color: var(--accent); }
+.tab-bar button.disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Controls */
+.controls {
+  display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;
+}
+.controls input[type="text"] {
+  background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text-bright); padding: 8px 12px; font-size: 14px; width: 240px; outline: none;
+}
+.controls input[type="text"]:focus { border-color: var(--accent); }
+.controls select {
+  background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text-bright); padding: 8px 12px; font-size: 13px; outline: none;
+  cursor: pointer;
+}
+.controls select:focus { border-color: var(--accent); }
+.controls label {
+  font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 8px;
+}
+.controls input[type="range"] { width: 160px; accent-color: var(--accent); }
+.controls .min-val { font-weight: 600; color: var(--text-bright); min-width: 40px; }
+.player-count { font-size: 13px; color: var(--text-dim); margin-left: auto; }
+
+/* Toolbar buttons (Columns, Download) */
+.toolbar-btn {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); padding: 6px 14px; font-size: 13px; cursor: pointer;
+}
+.toolbar-btn:hover { background: var(--border); }
+
+/* Column manager dropdown */
+/* Theme picker */
+.theme-menu {
+  display: none; position: fixed; top: 44px; right: 16px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 0; z-index: 100; min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.theme-menu.open { display: block; }
+.theme-menu div {
+  padding: 6px 16px; font-size: 13px; color: var(--text); cursor: pointer;
+}
+.theme-menu div:hover { background: var(--border); }
+.theme-menu div.active-theme { color: var(--accent); font-weight: 600; }
+
+.col-mgr-wrap { position: relative; }
+.col-mgr-menu {
+  display: none; position: absolute; top: 100%; left: 0; margin-top: 4px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 0; z-index: 50; min-width: 240px; max-height: 420px;
+  overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.col-mgr-menu.open { display: block; }
+.col-mgr-menu label {
+  display: flex; align-items: center; gap: 6px; padding: 5px 16px;
+  font-size: 13px; color: #c9d1d9; cursor: grab; user-select: none;
+}
+.col-mgr-menu label:hover { background: #21262d; }
+.col-mgr-menu label.locked { opacity: 0.5; cursor: default; }
+.col-mgr-menu label.cm-dragging { opacity: 0.4; }
+.col-mgr-menu label.cm-drag-over { border-top: 2px solid #58a6ff; }
+.col-mgr-menu .cm-grip { color: #484f58; font-size: 11px; flex-shrink: 0; cursor: grab; }
+.col-mgr-menu .col-mgr-reset {
+  border-top: 1px solid #30363d; padding: 8px 16px; margin-top: 4px;
+}
+.col-mgr-menu .col-mgr-reset button {
+  background: none; border: none; color: #58a6ff; font-size: 12px;
+  cursor: pointer; padding: 0;
+}
+.col-mgr-menu .col-mgr-reset button:hover { text-decoration: underline; }
+
+/* Stacked bar chart */
+.stacked-wrap {
+  margin: 0 0 16px 0; padding: 16px;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+}
+.stacked-controls {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.stacked-controls label { color: #8b949e; font-size: 13px; }
+.stacked-controls input {
+  background: #0d1117; color: #c9d1d9; border: 1px solid #30363d;
+  border-radius: 4px; padding: 4px 8px; font-size: 13px; width: 200px;
+}
+.stacked-pills { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.stacked-pill {
+  display: flex; align-items: center; gap: 4px; background: #21262d;
+  border: 1px solid #30363d; border-radius: 12px; padding: 3px 10px;
+  font-size: 12px; color: #c9d1d9;
+}
+.stacked-pill .pill-x {
+  cursor: pointer; color: #8b949e; font-weight: bold; margin-left: 2px;
+}
+.stacked-pill .pill-x:hover { color: #f85149; }
+.stacked-suggest {
+  position: absolute; background: #161b22; border: 1px solid #30363d;
+  border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 50;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: none;
+}
+.stacked-suggest div {
+  padding: 5px 12px; font-size: 12px; color: #c9d1d9; cursor: pointer;
+}
+.stacked-suggest div:hover { background: #21262d; }
+.stacked-canvas-wrap { position: relative; }
+#stackedCanvas { background: #0d1117; border-radius: 4px; display: block; }
+#stackedTooltip {
+  display: none; position: absolute; background: #1c2128; color: #e6edf3;
+  border: 1px solid #30363d; border-radius: 6px; padding: 6px 10px;
+  font-size: 12px; pointer-events: none; z-index: 10; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.stacked-legend { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
+.stacked-legend span { font-size: 12px; color: #8b949e; display: flex; align-items: center; gap: 4px; }
+.stacked-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
+
+/* Line chart (trends) */
+.trends-wrap {
+  margin: 0 0 16px 0; padding: 16px;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+}
+.trends-controls {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.trends-controls label {
+  color: #c9d1d9; font-size: 13px; display: flex; align-items: center; gap: 4px; cursor: pointer;
+}
+.trends-controls input[type="checkbox"] { cursor: pointer; }
+.trends-swatch { display: inline-block; width: 14px; height: 3px; border-radius: 1px; vertical-align: middle; }
+.trends-canvas-wrap { position: relative; }
+#trendsCanvas { background: #0d1117; border-radius: 4px; display: block; }
+#trendsTooltip {
+  display: none; position: absolute; background: #1c2128; color: #e6edf3;
+  border: 1px solid #30363d; border-radius: 6px; padding: 6px 10px;
+  font-size: 12px; pointer-events: none; z-index: 10; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Scatter plot */
+.scatter-wrap {
+  margin: 0 0 16px 0; padding: 16px;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+}
+.scatter-controls {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.scatter-controls label { color: #8b949e; font-size: 13px; }
+.scatter-controls select {
+  background: #0d1117; color: #c9d1d9; border: 1px solid #30363d;
+  border-radius: 4px; padding: 4px 8px; font-size: 13px;
+}
+.scatter-canvas-wrap { position: relative; }
+#scatterCanvas { background: #0d1117; border-radius: 4px; display: block; }
+/* Histogram */
+.histo-wrap {
+  margin: 0 0 16px 0; padding: 16px;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+}
+.histo-controls {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.histo-controls label { color: #8b949e; font-size: 13px; }
+.histo-controls select {
+  background: #0d1117; color: #c9d1d9; border: 1px solid #30363d;
+  border-radius: 4px; padding: 4px 8px; font-size: 13px;
+}
+.histo-canvas-wrap { position: relative; }
+#histoCanvas { background: #0d1117; border-radius: 4px; display: block; }
+#histoTooltip {
+  display: none; position: absolute; background: #1c2128; color: #e6edf3;
+  border: 1px solid #30363d; border-radius: 6px; padding: 6px 10px;
+  font-size: 12px; pointer-events: none; z-index: 10; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+#scatterHeadshots {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+}
+#scatterHeadshots img {
+  position: absolute; border-radius: 50%; object-fit: cover;
+  border: 1.5px solid #30363d; pointer-events: auto; cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+#scatterHeadshots img:hover {
+  transform: scale(1.3); border-color: #f0883e; z-index: 5;
+}
+#eraScatterHeadshots img {
+  position: absolute; border-radius: 50%; object-fit: cover;
+  border: 1.5px solid #30363d; pointer-events: auto; cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+#eraScatterHeadshots img:hover {
+  transform: scale(1.3); border-color: #f0883e; z-index: 5;
+}
+#scatterTooltip {
+  display: none; position: absolute; background: #1c2128; color: #e6edf3;
+  border: 1px solid #30363d; border-radius: 6px; padding: 6px 10px;
+  font-size: 12px; pointer-events: none; z-index: 10; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Column filter dropdown */
+.th-inner { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.th-label { flex: 1; }
+.filter-arrow {
+  font-size: 9px; color: #484f58; cursor: pointer; padding: 2px;
+  flex-shrink: 0; line-height: 1;
+}
+.filter-arrow:hover { color: #e6edf3; }
+.filter-arrow.active { color: #58a6ff; }
+.filter-panel {
+  position: fixed; z-index: 100;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5); width: 260px;
+  font-size: 13px; color: #c9d1d9;
+}
+.filter-panel .fp-sort { padding: 8px 12px; border-bottom: 1px solid #21262d; }
+.filter-panel .fp-sort button {
+  display: block; width: 100%; text-align: left; background: none; border: none;
+  color: #c9d1d9; padding: 6px 8px; cursor: pointer; border-radius: 4px;
+  font-size: 12px;
+}
+.filter-panel .fp-sort button:hover { background: #21262d; }
+.filter-panel .fp-sort button.active-sort { color: #58a6ff; font-weight: 600; }
+.filter-panel .fp-filter { padding: 8px 12px; }
+.filter-panel .fp-search {
+  width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 4px;
+  color: #e6edf3; padding: 5px 8px; font-size: 12px; outline: none;
+  margin-bottom: 6px;
+}
+.filter-panel .fp-search:focus { border-color: #58a6ff; }
+.filter-panel .fp-checks {
+  max-height: 220px; overflow-y: auto; border: 1px solid #21262d;
+  border-radius: 4px; background: #0d1117;
+}
+.filter-panel .fp-checks label {
+  display: flex; align-items: center; gap: 6px; padding: 3px 8px;
+  font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+.filter-panel .fp-checks label:hover { background: #161b22; }
+.filter-panel .fp-checks label.select-all {
+  border-bottom: 1px solid #21262d; font-weight: 500; color: #7d8590;
+}
+.filter-panel .fp-range {
+  display: flex; gap: 8px; align-items: center; margin-bottom: 6px;
+}
+.filter-panel .fp-range input {
+  width: 80px; background: #0d1117; border: 1px solid #30363d; border-radius: 4px;
+  color: #e6edf3; padding: 4px 6px; font-size: 12px; outline: none;
+}
+.filter-panel .fp-range input:focus { border-color: #58a6ff; }
+.filter-panel .fp-range span { color: #7d8590; font-size: 11px; }
+.filter-panel .fp-footer {
+  display: flex; gap: 8px; justify-content: flex-end; padding: 8px 12px;
+  border-top: 1px solid #21262d;
+}
+.filter-panel .fp-footer button {
+  padding: 4px 14px; border-radius: 4px; font-size: 12px; cursor: pointer;
+  border: 1px solid #30363d;
+}
+.filter-panel .fp-footer .fp-apply {
+  background: #238636; border-color: #238636; color: #fff;
+}
+.filter-panel .fp-footer .fp-apply:hover { background: #2ea043; }
+.filter-panel .fp-footer .fp-clear {
+  background: none; color: #c9d1d9;
+}
+.filter-panel .fp-footer .fp-clear:hover { background: #21262d; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+thead th {
+  position: sticky; top: 0; background: var(--bg2);
+  border-bottom: 2px solid var(--border); padding: 10px 10px;
+  text-align: center; font-weight: 600; color: var(--text-dim);
+  cursor: pointer; user-select: none; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.5px; z-index: 2;
+}
+thead th:hover { color: var(--text-bright); }
+thead th.sorted-asc::after { content: " \25B2"; color: var(--accent); }
+thead th.sorted-desc::after { content: " \25BC"; color: var(--accent); }
+thead th.no-sort { cursor: default; }
+thead th.drag-over { border-left: 2px solid var(--accent); }
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: center; }
+tbody tr:hover { background: var(--row-hover); }
+tbody tr.expanded { background: var(--row-hover); }
+tbody tr.clickable { cursor: pointer; }
+td.num { text-align: center; font-variant-numeric: tabular-nums; }
+td.player-name { font-weight: 500; color: var(--text-bright); text-align: left; }
+td.team { color: var(--text-dim); }
+
+/* Expand panel */
+tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
+.detail-panel {
+  background: #0d1117; padding: 16px 24px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 24px;
+}
+.comp-item {
+  display: flex; justify-content: space-between; padding: 4px 0;
+  font-size: 12px; border-bottom: 1px solid #161b22;
+}
+.comp-item .comp-label { color: #7d8590; }
+.comp-item .comp-value { color: #e6edf3; font-variant-numeric: tabular-nums; }
+.comp-item .comp-value .eff { color: #58a6ff; margin-left: 6px; }
+.comp-item.zero { opacity: 0.35; }
+.detail-header {
+  grid-column: 1 / -1; font-size: 11px; color: #7d8590;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding-bottom: 4px; border-bottom: 1px solid #30363d; margin-bottom: 4px;
+}
+
+/* Stacked bar */
+.stacked-bar {
+  display: flex; height: 16px; border-radius: 3px; overflow: hidden;
+  min-width: 200px; max-width: 320px;
+}
+.stacked-bar .seg { height: 100%; min-width: 1px; }
+.bar-legend {
+  display: flex; gap: 16px; margin-bottom: 10px; font-size: 12px; color: #7d8590;
+  flex-wrap: wrap; justify-content: center;
+}
+.bar-legend span { display: flex; align-items: center; gap: 5px; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
+.bar-clean2 { background: #4493f8; }
+.bar-clean3 { background: #3fb950; }
+.bar-sf2    { background: #d29922; }
+.bar-sf3    { background: #e3b341; }
+.bar-and1   { background: #a371f7; }
+.bar-penalty{ background: #656d76; }
+
+/* Show more */
+.show-more-wrap { text-align: center; padding: 16px; }
+.show-more-wrap button {
+  background: #21262d; border: 1px solid #30363d; border-radius: 6px;
+  color: #e6edf3; padding: 8px 24px; font-size: 13px; cursor: pointer;
+}
+.show-more-wrap button:hover { background: #30363d; }
+
+/* About tab */
+.about-content {
+  max-width: 800px; margin: 0 auto; padding: 8px 0 48px;
+  line-height: 1.7; overflow: hidden;
+}
+.about-content h2 {
+  font-size: 22px; font-weight: 700; color: #e6edf3;
+  margin-top: 40px; margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid #21262d; text-align: center;
+}
+.about-content h2:first-child { margin-top: 8px; }
+.about-content p { font-size: 14px; color: #c9d1d9; margin-bottom: 10px; }
+.about-content pre {
+  background: #161b22; border: 1px solid #30363d; border-radius: 6px;
+  padding: 14px 18px; font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+  font-size: 13px; color: #e6edf3; line-height: 1.6; margin: 12px 0; overflow-x: auto;
+}
+.about-content strong { color: #e6edf3; }
+.about-content ul { font-size: 14px; color: #c9d1d9; margin: 0 0 10px 20px; padding: 0; }
+.about-content li { margin-bottom: 4px; }
+.about-table {
+  width: 100%; border-collapse: collapse; margin: 12px 0 16px;
+  font-size: 13px; table-layout: fixed;
+}
+.about-table td, .about-table th { word-wrap: break-word; }
+.about-table th, .about-table thead th {
+  background: #161b22; border: 1px solid #30363d; padding: 8px 12px;
+  text-align: center; font-weight: 600; color: #7d8590; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.5px; white-space: normal;
+}
+.about-table td, .about-table tbody td {
+  border: 1px solid #21262d; padding: 8px 12px; color: #c9d1d9;
+  vertical-align: middle; text-align: center; white-space: normal; word-wrap: break-word;
+}
+.about-table tr:hover td { background: #161b22; }
+
+/* About sub-tabs */
+.about-subtab-bar {
+  display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #21262d;
+}
+.about-subtab-bar button {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: #7d8590; font-size: 13px; font-weight: 500; padding: 7px 16px;
+  cursor: pointer; transition: color 0.15s, border-color 0.15s;
+}
+.about-subtab-bar button:hover { color: #c9d1d9; }
+.about-subtab-bar button.active { color: #c9d1d9; border-bottom-color: #58a6ff; }
+.about-subtab-pane { display: none; }
+.about-subtab-pane.active { display: block; }
+.chart-pane { display: none; }
+.chart-pane.active { display: block; }
+.chart-help-toggle {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 50%;
+  color: var(--text); width: 24px; height: 24px; font-size: 13px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 8px; vertical-align: middle; opacity: 0.6; transition: opacity 0.15s;
+}
+.chart-help-toggle:hover { opacity: 1; }
+.chart-help-panel {
+  display: none; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; margin: 8px 0 4px 0;
+  font-size: 13px; color: #c9d1d9; line-height: 1.5;
+}
+.chart-help-panel.open { display: block; }
+.chart-help-panel dt { font-weight: 600; color: #e6edf3; margin-top: 6px; }
+.chart-help-panel dt { margin-top: 0; }
+.chart-help-panel dd { margin: 2px 0 0 0; color: #8b949e; }
+.chart-help-item { display: none; }
+.chart-help-item.active { display: block; }
+/* Download dropdown */
+.dl-wrap { position: relative; display: inline-block; }
+.dl-menu {
+  display: none; position: absolute; top: 100%; left: 0; margin-top: 4px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 4px 0; z-index: 50; min-width: 140px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.dl-menu.open { display: block; }
+.dl-menu div {
+  padding: 6px 16px; font-size: 13px; color: var(--text); cursor: pointer;
+}
+.dl-menu div:hover { background: var(--border); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="tooltip-float" id="tooltipFloat"></div>
+<div class="theme-picker" id="themePicker">
+  <button class="toolbar-btn" id="themeBtn" style="position:fixed;top:12px;right:16px;z-index:100;font-size:12px;">Theme</button>
+  <div class="theme-menu" id="themeMenu"></div>
+</div>
+<h1 id="pageTitle">Pure Shooting % — 2025-26 Season</h1>
+<p class="subtitle">Deterministic shooting efficiency for every NBA player</p>
+<p class="subtitle" id="subtitleDelta"></p>
+<p class="subtitle" style="font-size:11px;color:#555;margin-top:2px;">Last updated: /*BUILD_DATE*/</p>
+
+<div class="tab-bar" id="tabBar">
+  <button class="active" data-tab="rankings">Rankings</button>
+  <button data-tab="foulprofile">Foul Profile</button>
+  <button data-tab="fttype">FT by Type</button>
+  <button data-tab="distortion">All Game Logs</button>
+  <button data-tab="charts">Charts</button>
+  <button data-tab="about">About</button>
+</div>
+
+<div class="controls" id="controls">
+  <select id="seasonSelect" data-tooltip="Select NBA season"></select>
+  <input type="text" id="search" placeholder="Search player...">
+  <!-- TODO: Position filter — no position data available yet -->
+  <label id="minPossLabel">
+    <span id="minPossLabelText">Min season possessions:</span>
+    <input type="range" id="minPoss" min="0" max="2000" value="500" step="10">
+    <span class="min-val" id="minPossVal">500</span>
+  </label>
+  <div class="col-mgr-wrap" id="colMgrWrap">
+    <button class="toolbar-btn" id="colMgrBtn">Columns</button>
+    <div class="col-mgr-menu" id="colMgrMenu"></div>
+  </div>
+  <button class="toolbar-btn" id="resetAllBtn" style="display:none;">Reset Filters</button>
+  <div class="dl-wrap">
+    <button class="toolbar-btn" id="downloadBtn">Download</button>
+    <div class="dl-menu" id="dlMenu">
+      <div data-fmt="csv">CSV (.csv)</div>
+      <div data-fmt="xlsx">Excel (.xlsx)</div>
+    </div>
+  </div>
+  <span class="player-count" id="playerCount"></span>
+</div>
+<div class="filter-panel" id="filterPanel" style="display:none;"></div>
+
+<!-- Tab 1: Rankings -->
+<div class="tab-content active" id="tab-rankings">
+<div class="table-wrap">
+<table id="tbl-rankings">
+<thead><tr id="hdr-rankings"></tr></thead>
+<tbody id="body-rankings"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Tab 2: Foul Profile -->
+<div class="tab-content" id="tab-foulprofile">
+<div class="bar-legend">
+  <span><i class="swatch bar-clean2"></i> Clean 2PT</span>
+  <span><i class="swatch bar-clean3"></i> Clean 3PT</span>
+  <span><i class="swatch bar-sf2"></i> 2PT SF</span>
+  <span><i class="swatch bar-sf3"></i> 3PT SF</span>
+  <span><i class="swatch bar-and1"></i> And-1s</span>
+  <span><i class="swatch bar-penalty"></i> Penalty FTs</span>
+</div>
+<div class="table-wrap">
+<table><thead><tr id="hdr-foulprofile"></tr></thead>
+<tbody id="body-foulprofile"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Tab 3: FT by Type -->
+<div class="tab-content" id="tab-fttype">
+<div class="table-wrap">
+<table><thead><tr id="hdr-fttype"></tr></thead>
+<tbody id="body-fttype"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Tab 4: All Game Logs -->
+<div class="tab-content" id="tab-distortion">
+<div class="controls" id="gamelogs-controls" style="margin-bottom:12px;">
+  <label>
+    <span style="font-size:13px;color:#7d8590;">Min |delta|:</span>
+    <input type="range" id="deltaSlider" min="0" max="30" value="0" step="1" style="width:160px;accent-color:#58a6ff;">
+    <span class="min-val" id="deltaSliderVal">0</span><span style="font-size:13px;color:#7d8590;">pp</span>
+  </label>
+  <label style="font-size:13px;color:#7d8590;display:flex;align-items:center;gap:8px;">
+    Quarter:
+    <select id="quarterSelect" style="background:#161b22;border:1px solid #30363d;border-radius:6px;color:#e6edf3;padding:6px 10px;font-size:13px;outline:none;cursor:pointer;">
+      <option value="all">All (Full Game)</option>
+      <option value="q1">Q1</option>
+      <option value="q2">Q2</option>
+      <option value="q3">Q3</option>
+      <option value="q4">Q4</option>
+    </select>
+  </label>
+</div>
+<div class="table-wrap">
+<table><thead><tr id="hdr-distortion"></tr></thead>
+<tbody id="body-distortion"></tbody>
+</table>
+</div>
+<div class="show-more-wrap" id="showMoreWrap">
+  <button id="showMoreBtn">Show more</button>
+</div>
+</div>
+
+<!-- Tab 5: Charts -->
+<div class="tab-content" id="tab-charts">
+
+<div class="about-subtab-bar" id="chartSubtabBar">
+  <button class="active" data-charttab="scatter">Scatter Plot</button>
+  <button data-charttab="histogram">Histogram</button>
+  <button data-charttab="trends">Trends</button>
+  <button data-charttab="composition">Composition</button>
+  <button class="chart-help-toggle" id="chartHelpBtn" title="Chart descriptions">?</button>
+</div>
+<div class="chart-help-panel" id="chartHelpPanel">
+<div class="chart-help-item" data-helpfor="scatter"><dt>Scatter Plot</dt><dd>Plot any two stats against each other for all qualified players. Toggle headshots on/off. Hover for player details.</dd></div>
+<div class="chart-help-item" data-helpfor="histogram"><dt>Histogram</dt><dd>Distribution of any stat across the league. Shows mean and median lines. Adjust bin count with slider.</dd></div>
+<div class="chart-help-item" data-helpfor="trends"><dt>Trends</dt><dd>League-wide averages across all 47 seasons. Track how PS%, TS%, Delta, 3PA Rate, and other metrics have changed over time.</dd></div>
+<div class="chart-help-item" data-helpfor="composition"><dt>Composition</dt><dd>Stacked bar chart showing how each player&rsquo;s scoring possessions break down by type (clean FGA, shooting fouls, And-1s, bonus fouls, etc.). PBP seasons only.</dd></div>
+</div>
+
+<div class="chart-pane active" id="chartpane-scatter">
+<div class="scatter-wrap" id="scatterWrap">
+  <div class="scatter-controls">
+    <label>X Axis: <select id="scatterX"></select></label>
+    <label>Y Axis: <select id="scatterY"></select></label>
+    <button class="toolbar-btn" id="headshotToggle" style="font-size:12px;padding:4px 10px;">Show Headshots</button>
+  </div>
+  <div class="scatter-canvas-wrap">
+    <canvas id="scatterCanvas" width="900" height="500"></canvas>
+    <div id="scatterHeadshots"></div>
+    <div id="scatterTooltip"></div>
+  </div>
+</div>
+</div>
+
+<div class="chart-pane" id="chartpane-histogram">
+<div class="histo-wrap" id="histoWrap">
+  <div class="histo-controls">
+    <label>Column: <select id="histoCol"></select></label>
+  </div>
+  <div class="histo-canvas-wrap">
+    <canvas id="histoCanvas" width="900" height="400"></canvas>
+    <div id="histoTooltip"></div>
+  </div>
+</div>
+</div>
+
+<div class="chart-pane" id="chartpane-trends">
+<div class="trends-wrap" id="trendsWrap">
+  <div class="trends-controls">
+    <label><input type="checkbox" id="trendPure" checked> <span class="trends-swatch" style="background:#58a6ff;"></span> PS%</label>
+    <label><input type="checkbox" id="trendStd" checked> <span class="trends-swatch" style="background:#f0883e;"></span> TS%</label>
+    <label><input type="checkbox" id="trendDelta" checked> <span class="trends-swatch" style="background:#f85149;"></span> Delta</label>
+    <label><input type="checkbox" id="trend3pa"> <span class="trends-swatch" style="background:#3fb950;"></span> 3PA Rate</label>
+  </div>
+  <div class="trends-canvas-wrap">
+    <canvas id="trendsCanvas" width="900" height="450"></canvas>
+    <div id="trendsTooltip"></div>
+  </div>
+</div>
+</div>
+
+<div class="chart-pane" id="chartpane-composition">
+<div class="stacked-wrap" id="stackedWrap">
+  <div class="stacked-controls">
+    <label>Add player: <span style="position:relative;"><input type="text" id="stackedSearch" placeholder="Type a name..."><div class="stacked-suggest" id="stackedSuggest"></div></span></label>
+    <div class="stacked-pills" id="stackedPills"></div>
+  </div>
+  <div class="stacked-canvas-wrap">
+    <canvas id="stackedCanvas" width="900" height="350"></canvas>
+    <div id="stackedTooltip"></div>
+  </div>
+  <div class="stacked-legend" id="stackedLegend"></div>
+</div>
+</div>
+
+</div>
+
+<!-- Tab 6: About -->
+<div class="tab-content" id="tab-about">
+<div class="about-content">
+
+<div class="about-subtab-bar" id="aboutSubtabBar">
+  <button class="active" data-subtab="the-problem">The Problem</button>
+  <button data-subtab="methodology">Methodology</button>
+  <button data-subtab="historical">Historical Evidence</button>
+  <button data-subtab="crossera">Cross-Era Comparison</button>
+</div>
+
+<div class="about-subtab-pane active" id="subtab-the-problem">
+
+<h2>The Problem with True Shooting % (TS%)</h2>
+<p>True Shooting Percentage (TS%) is the most widely used measure of shooting efficiency in basketball. It attempts to capture a player&rsquo;s total scoring efficiency by accounting for 2-point field goals, 3-point field goals, and free throws in a single number. The intention is sound. The execution has two mathematical flaws, one minor and one fundamental.</p>
+<p>Shooting efficiency, at its core, answers a simple question: of all the points a player could have scored given the attempts they took, how many did they actually score? This is already how we measure efficiency for individual shot types. A player who goes 4 for 10 on 3-pointers shot 40%. Said another way, they scored 12 points out of a possible 30 points on their 3-point attempts. A player who goes 7 for 10 on free throws shot 70%, scoring 7 points out of a possible 10. This works cleanly because both the numerator and denominator deal in the same unit: 3-point shots divided by 3-point shots, free throws divided by free throws.</p>
+<p>Standard NBA box scores provide 3-point and free throw attempts, makes, and the subsequent efficiency expressed as a percentage. 3P% simply equals 3PM / 3PA. This is a true percentage and an accurate calculation of 3-point efficiency. A player&rsquo;s 3-point shooting efficiency is how many threes they made out of all the threes they took. That makes sense intuitively, and it should.</p>
+<p>However, standard box scores do not separate 2-point and 3-point field goal attempts. All shot attempts from the field are combined into a single number: FGA. This is where the problem begins.</p>
+<p>Because a 2-point field goal is worth 2 points and a 3-point field goal is worth 3, a single FGA figure blends two different scoring values together. Dividing total field goals made by total field goal attempts does not produce a meaningful efficiency number, because making a 3-pointer generates more points than making a 2-pointer from the same number of attempts. Despite this structural limitation, the resulting FG% is a stat often referenced for both players and teams. This also belies that it does not consider free throws at all.</p>
+<p>The methodology behind 3P% and FT% is sound, both logically and mathematically: points scored divided by points possible. TS% strays from this methodology in an attempt to reconcile the difference in point values, and account for free throws, introducing approximations and a denominator structure that distorts the answer, particularly for players who shoot 3-pointers. PS% restores the sound methodology to what shooting efficiency was always intended to measure: points scored divided by points possible. It applies this across all three ways a player can score (2-point field goals, 3-point field goals, and free throws), producing a single figure.</p>
+<p>True Shooting Percentage uses this formula:</p>
+<pre>TS% = PTS / (2 &times; (FGA + 0.44 &times; FTA))</pre>
+<p>A common criticism of TS% is that the 0.44 coefficient is an approximation. But the 0.44 is actually the least broken part of this formula. The more significant flaw is the <strong>2</strong> in the denominator.</p>
+
+<h2>Problem 1 (Minor): The 0.44 Coefficient</h2>
+<p>The 0.44 exists to estimate how many possessions free throws consumed. Not every trip to the free throw line is the same:</p>
+<ul>
+<li>An And-1 earns one free throw</li>
+<li>A shooting foul earns two</li>
+<li>A three-point shooting foul earns three</li>
+</ul>
+<p>The 0.44 is a league-wide average designed to collapse all of these into a single approximation.</p>
+<p>Across 1,104 qualified player-seasons in our play-by-play dataset (2020-21 through 2025-26), the actual league-wide coefficient is approximately <strong>0.453</strong>. Using 0.44 instead produces a mean error of <strong>+0.19 percentage points</strong>. About 90% of players fall within 0.05 of the true coefficient.</p>
+<p>That is a small error. Within a single game, the 0.44 can produce noticeable distortions, particularly when a player&rsquo;s foul mix deviates from the league average. But across a full season, the coefficient&rsquo;s inaccuracy is real and worth fixing, not the catastrophic distortion people think it is.</p>
+<p><strong>The 0.44 is a problem. It is not the problem.</strong></p>
+<p>The 0.44 contributes +0.19pp of error on average. The &ldquo;2&rdquo; contributes approximately 9-10pp. The part people criticize is roughly 50 times smaller than the less discussed structural flaw. Both figures are derived from the play-by-play and box score data on this site.</p>
+
+<h2>Problem 2 (Fatal): The &ldquo;2&rdquo; in the Denominator</h2>
+<p>The standard formula divides everything by <code>2 &times; (FGA + 0.44 &times; FTA)</code>. This means every attempt is treated as if its maximum value is 2 points. A player who scores 20 points on 20 attempts gets 20/40 = 50%. That works fine for 2-pointers, but a 3-pointer is worth more than 2.</p>
+<h3>Example Box Scores</h3>
+<p>Pure Shooting % uses a different formula: <code>PTS / (2&times;FGA + 3PA + FTA)</code>. The full derivation is on the Methodology tab. Here is how the two formulas compare on simple examples.</p>
+<p><strong>Perfect shooting: every player converts 100% of their attempts.</strong></p>
+<table class="about-table">
+<thead><tr><th>Scenario</th><th>Line</th><th>PTS</th><th>TS%</th><th>PS%</th></tr></thead>
+<tbody>
+<tr><td>10/10 on 2-pointers</td><td>20 pts, 10 FGA, 0 FTA</td><td>20</td><td>100.0%</td><td>100.0%</td></tr>
+<tr><td>10/10 on 3-pointers</td><td>30 pts, 10 FGA, 0 FTA</td><td>30</td><td>150.0%</td><td>100.0%</td></tr>
+<tr><td>10/10 on free throws</td><td>10 pts, 0 FGA, 10 FTA</td><td>10</td><td>113.6%</td><td>100.0%</td></tr>
+<tr><td>5/5 on 3s + 5/5 on 2s</td><td>25 pts, 10 FGA, 0 FTA</td><td>25</td><td>125.0%</td><td>100.0%</td></tr>
+</tbody>
+</table>
+<p>All four players scored every possible point on every attempt. PS% gives all four the same score: 100%. TS% ranges from 100% to 150% depending on shot type.</p>
+<p><strong>50% shooting: same accuracy, different shot types.</strong></p>
+<table class="about-table">
+<thead><tr><th>Scenario</th><th>Line</th><th>PTS</th><th>TS%</th><th>PS%</th></tr></thead>
+<tbody>
+<tr><td>5/10 all 2-pointers</td><td>10 pts, 10 FGA, 0 FTA</td><td>10</td><td>50.0%</td><td>50.0%</td></tr>
+<tr><td>5/10 all 3-pointers</td><td>15 pts, 10 FGA, 0 FTA</td><td>15</td><td>75.0%</td><td>50.0%</td></tr>
+<tr><td>3/5 on 3s + 2/5 on 2s</td><td>13 pts, 10 FGA, 0 FTA</td><td>13</td><td>65.0%</td><td>52.0%</td></tr>
+<tr><td>2/5 on 3s + 3/5 on 2s</td><td>12 pts, 10 FGA, 0 FTA</td><td>12</td><td>60.0%</td><td>48.0%</td></tr>
+</tbody>
+</table>
+<p>Two players shoot 50% from the field on the same number of attempts. PS% correctly gives both 50%. TS% says the 3-point shooter was 25 percentage points more efficient, for shooting the exact same percentage from a different spot on the floor.</p>
+<p>This is not a rounding error. It is a structural flaw baked into the formula&rsquo;s design.</p>
+
+<h2>What This Looks Like in Practice</h2>
+<table class="about-table">
+<thead><tr><th>Player</th><th>Season</th><th>3PT Attempt Rate</th><th>TS%</th><th>PS%</th><th>Distortion</th></tr></thead>
+<tbody>
+<tr><td>AJ Green</td><td>2025-26</td><td>85.8%</td><td>60.94%</td><td>43.37%</td><td>+17.0 pp</td></tr>
+<tr><td>Steph Curry</td><td>2020-21</td><td>51.8%</td><td>65.47%</td><td>53.03%</td><td>+12.8 pp</td></tr>
+<tr><td>Shai Gilgeous-Alexander</td><td>2025-26</td><td>22.3%</td><td>66.30%</td><td>59.50%</td><td>+6.9 pp</td></tr>
+<tr><td>Deandre Ayton</td><td>2023-24</td><td>6.6%</td><td>58.48%</td><td>57.96%</td><td>+0.5 pp</td></tr>
+</tbody>
+</table>
+<p>The distortion is not random noise. It is almost perfectly correlated with 3PT attempt rate. Players who live behind the arc are systematically overrated by TS%. Players who live at the rim are barely affected. The average distortion across the league is <strong>~9-10 percentage points</strong>, ranging from about 0.5pp to 17.5pp at the individual player level.</p>
+<p>For a detailed comparison across 30+ iconic player-seasons from every era, see the <a href="#" onclick="document.querySelector('[data-subtab=crossera]').click();return false;" style="color:#58a6ff;">Cross-Era Comparison tab</a>.</p>
+
+<h2>What This Means for Comparisons</h2>
+<p><strong>Cross-archetype comparisons (3PT shooter vs. rim scorer):</strong> Unfit for purpose. A 15+ percentage point structural bias between player archetypes means TS% cannot answer the question &ldquo;who was more efficient?&rdquo; when the players operate in different parts of the floor.</p>
+<p><strong>Within-archetype comparisons (guard vs. guard, center vs. center):</strong> Adequate. When two players have similar 3PT attempt rates, the distortion is similar and largely cancels out. TS% rankings within a position group tend to hold.</p>
+<p><strong>Historical and era comparisons:</strong> Increasingly unfit. The NBA has shifted dramatically toward 3PT attempts over the past decade. Comparing a 2010 player at 20% 3PT rate against a 2025 player at 50% 3PT rate using TS% conflates efficiency improvement with shot-type inflation.</p>
+
+<h2>When A &ldquo;Percentage&rdquo; Exceeds 100%</h2>
+<p>A percentage that exceeds 100% is not a percentage. Across six NBA seasons (2020-21 through 2025-26), <strong>283 individual games</strong> produced a TS% above 100%, in games with at least 10 scoring possessions. These are not obscure bench performances. They include All-Stars and playoff starters:</p>
+<table class="about-table">
+<thead><tr><th>Player</th><th>Date</th><th>Line</th><th>TS%</th><th>PS%</th></tr></thead>
+<tbody>
+<tr><td>Luke Kennard</td><td>Mar 24, 2023</td><td>30 pts, 11 FGA, 0 FTA</td><td>136.4%</td><td>90.9%</td></tr>
+<tr><td>Sam Merrill</td><td>Feb 11, 2026</td><td>32 pts, 12 FGA, 1 FTA</td><td>128.6%</td><td>91.7%</td></tr>
+<tr><td>Michael Porter Jr.</td><td>Mar 2, 2024</td><td>25 pts, 10 FGA, 0 FTA</td><td>125.0%</td><td>100.0%</td></tr>
+<tr><td>Davis Bertans</td><td>Feb 17, 2021</td><td>35 pts, 11 FGA, 8 FTA</td><td>120.5%</td><td>85.7%</td></tr>
+<tr><td>Tyrese Haliburton</td><td>Apr 1, 2022</td><td>30 pts, 11 FGA, 4 FTA</td><td>117.5%</td><td>92.3%</td></tr>
+<tr><td>Paul George</td><td>Mar 14, 2024</td><td>28 pts, 12 FGA, 0 FTA</td><td>116.7%</td><td>91.7%</td></tr>
+</tbody>
+</table>
+<p>The pattern: 3-point-heavy games with few free throws. The &ldquo;2&rdquo; denominator gives these players credit for scoring 3 points on an attempt calibrated for 2, and the formula has no mechanism to prevent the result from exceeding 100%. PS% measures each of these games on a true 0&ndash;100% scale.</p>
+
+<h2>The Name Is a Misnomer</h2>
+<p>TS% is not bounded at 100%. It is not a true percentage. And it does not measure shooting efficiency in a way that holds across player archetypes or eras. The &ldquo;True&rdquo; in &ldquo;True Shooting Percentage&rdquo; was meant to signal that it accounts for free throws and three-pointers, an improvement over raw field goal percentage. That was the right instinct. The execution is broken.</p>
+<p><strong>Pure Shooting % fixes both problems</strong> with a simpler formula: <code>PTS / (2&times;FGA + 3PA + FTA)</code>. Four standard box score numbers, no arbitrary coefficients. The result is a true 0&ndash;100% scale where 100% means a player scored every possible point on every scoring opportunity they had.</p>
+
+<h2>Same Efficiency, Different TS%</h2>
+<p>The following pairs of hypothetical box scores demonstrate the distortion. In each pair, both players scored the same number of points out of the same maximum possible points, giving them identical PS%. TS% gives the 3-point shooter a higher score every time.</p>
+<table class="about-table">
+<thead><tr><th>Pair</th><th>Player</th><th>Line</th><th>PTS</th><th>Max PTS</th><th>PS%</th><th>TS%</th></tr></thead>
+<tbody>
+<tr style="border-bottom:none;"><td rowspan="2" style="vertical-align:middle;">Small gap</td><td>Mid-range scorer</td><td>8/16 2PT, 1/2 3PT, 3/4 FT</td><td class="num">22</td><td class="num">42</td><td class="num">52.4%</td><td class="num">55.7%</td></tr>
+<tr style="border-bottom:1px solid #21262d;"><td>Perimeter scorer</td><td>8/13 2PT, 1/4 3PT, 3/4 FT</td><td class="num">22</td><td class="num">42</td><td class="num">52.4%</td><td class="num">58.6%</td></tr>
+<tr style="border-bottom:none;"><td rowspan="2" style="vertical-align:middle;">Medium gap</td><td>Interior scorer</td><td>10/18 2PT, 1/2 3PT, 5/8 FT</td><td class="num">28</td><td class="num">50</td><td class="num">56.0%</td><td class="num">59.5%</td></tr>
+<tr style="border-bottom:1px solid #21262d;"><td>Perimeter scorer</td><td>7/12 2PT, 3/6 3PT, 5/8 FT</td><td class="num">28</td><td class="num">50</td><td class="num">56.0%</td><td class="num">65.1%</td></tr>
+<tr style="border-bottom:none;"><td rowspan="2" style="vertical-align:middle;">Large gap</td><td>Rim scorer</td><td>11/21 2PT, 0/0 3PT, 8/10 FT</td><td class="num">30</td><td class="num">52</td><td class="num">57.7%</td><td class="num">59.1%</td></tr>
+<tr><td>3PT shooter</td><td>7/12 2PT, 3/6 3PT, 7/10 FT</td><td class="num">30</td><td class="num">52</td><td class="num">57.7%</td><td class="num">67.0%</td></tr>
+</tbody>
+</table>
+
+<h2>The Relationship Is Structural</h2>
+<p>Across all 47 seasons, 3-point attempt rate explains 99.86% of the variance in the distortion between TS% and PS% (R&sup2; = 0.9986). The relationship follows: Delta = -0.91 + (-0.208 &times; 3PA Rate). Every 1 percentage point increase in league 3PA rate widens the gap by approximately 0.21 percentage points.</p>
+<p>At the current league 3PA rate of ~42%, the average distortion is approximately 9.7 percentage points. If the league reaches 50% 3PA rate, the distortion would exceed 11 percentage points. The gap is not stabilizing. It is growing.</p>
+<p>This means TS% systematically overrates players who shoot more 3-pointers and underrates those who don&rsquo;t. Two players with identical actual shooting efficiency will receive different TS% scores if one takes more 3-pointers than the other. PS% eliminates this bias entirely: a player&rsquo;s score depends only on how many of their available points they actually scored, regardless of where they shot from.</p>
+
+</div>
+
+<div class="about-subtab-pane" id="subtab-methodology">
+
+<h2>The Formula</h2>
+<pre>PS% = PTS / (2&times;FGA + 3PA + FTA)</pre>
+<p>Pure Shooting % (PS%) measures shooting efficiency using four standard box score numbers:</p>
+<ul>
+<li>Points (PTS)</li>
+<li>Field goal attempts (FGA)</li>
+<li>Three-point attempts (3PA)</li>
+<li>Free throw attempts (FTA)</li>
+</ul>
+<p>The numerator is total points scored. The denominator is the maximum points that could have been scored across all of a player&rsquo;s attempts. The result is a true 0&ndash;100% scale with no approximations or arbitrary coefficients. This captures a player&rsquo;s precise shooting efficiency over a given game, season, or career.</p>
+<p>This is not a model or an approximation. If the question is &ldquo;what percentage of available points did a player score,&rdquo; there is only one calculation that answers it: total points divided by total possible points. The data to compute this has always been on every standard box score. No play-by-play parsing, no estimated coefficients, no arbitrary weights required.</p>
+<p>For reference, TS% uses: <code>PTS / (2 &times; (FGA + 0.44 &times; FTA))</code>. PS% is simpler, more precise, and a true percentage.</p>
+
+<h2>Where The Formula Comes From</h2>
+<p>There are only three ways to score in basketball. Each has a known maximum value per attempt:</p>
+<table class="about-table">
+<thead><tr><th>Attempt Type</th><th>Max Points</th><th>Existing Stat</th></tr></thead>
+<tbody>
+<tr><td>2-point field goal</td><td>2</td><td>2P% = 2PM / 2PA</td></tr>
+<tr><td>3-point field goal</td><td>3</td><td>3P% = 3PM / 3PA</td></tr>
+<tr><td>Free throw</td><td>1</td><td>FT% = FTM / FTA</td></tr>
+</tbody>
+</table>
+<p>To combine all three into one overall shooting percentage, sum all points scored for the numerator and sum all possible points that could have been scored for the denominator. Divide the numerator by the denominator for PS%.</p>
+<pre>
+Numerator (points scored)          = 2&times;2PM + 3&times;3PM + FTM  (which is just PTS)
+Denominator (max possible points)  = 2&times;2PA + 3&times;3PA + FTA
+
+Unsimplified formula: PS% = (2&times;2PM + 3&times;3PM + FTM) / (2&times;2PA + 3&times;3PA + FTA)
+</pre>
+<p>Standard box scores show FGA (all field goal attempts) rather than 2PA separately. Since 2PA = FGA &minus; 3PA, we replace the 2PA term in the denominator with FGA &minus; 3PA. Here is the denominator simplified:</p>
+<pre>
+2&times;2PA + 3&times;3PA + FTA
+= 2&times;(FGA &minus; 3PA) + 3&times;3PA + FTA
+= 2&times;FGA &minus; 2&times;3PA + 3&times;3PA + FTA
+= 2&times;FGA + 3PA + FTA
+</pre>
+<p>2&times;FGA + 3PA + FTA is the denominator simplified. So again, the formula is points scored divided by max possible points, expressed using four numbers on every box score:</p>
+<pre>PS% = PTS / (2&times;FGA + 3PA + FTA)</pre>
+
+<h2>What About Free Throw Types?</h2>
+<p>A natural follow-up: does the formula need to account for whether a player shoots 1, 2, or 3 free throws on a given trip to the line?</p>
+<p>No. Every free throw attempt has a max value of 1 point regardless of how many are awarded on the play. The box score records all FTAs. The formula counts them all &mdash; each one adds 1 to the denominator.</p>
+<p>The formula was originally derived by classifying every scoring event into 12 play-by-play components (shooting fouls, And-1s, technicals, flagrants, bonus fouls, etc.) and proving that the max possible points across all 12 components sum to exactly <code>2&times;FGA + 3PA + FTA</code>. That derivation confirmed the formula is correct. The component-level breakdown also powers the diagnostic tabs on this site &mdash; foul profiles, FT efficiency by type, And-1 rates &mdash; but it doesn&rsquo;t change the headline number.</p>
+
+<h2>How To Read The Stats</h2>
+<table class="about-table">
+<colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+<thead><tr><th>Stat</th><th>What It Means</th></tr></thead>
+<tbody>
+<tr><td><strong>PS%</strong></td><td>Points scored as a percentage of maximum possible points. The core metric.</td></tr>
+<tr><td><strong>TS%</strong></td><td>Traditional True Shooting %. Shown for comparison.</td></tr>
+<tr><td><strong>Delta</strong></td><td>PS% minus TS%. Negative means TS% overrated the player. The gap is driven primarily by the &ldquo;2&rdquo; denominator in TS% which inflates 3-point shooters.</td></tr>
+<tr><td><strong>Scoring Possessions (SP)</strong></td><td>Total scoring events: FGA + non-shooting foul events. Broader than FGA because it includes events that produce FTAs but no FGA (shooting fouls, bonus fouls, etc.).</td></tr>
+<tr><td><strong>And-1 Rate</strong></td><td>% of made field goals that resulted in an And-1.</td></tr>
+<tr><td><strong>Foul Draw Rate</strong></td><td>% of scoring possessions that involved any foul.</td></tr>
+<tr><td><strong>Hidden Possessions</strong></td><td>Scoring events that produced zero FGAs in the box score (shooting fouls, bonus fouls, etc.). Shows how much of a player&rsquo;s scoring activity is invisible to FGA-based stats.</td></tr>
+</tbody>
+</table>
+<p>Use the <strong>Columns</strong> button on any tab to show or hide columns. Drag column headers to reorder them. Use the <strong>Download</strong> button to export the currently visible, filtered data as CSV or Excel.</p>
+
+<h2>How To Read The Tabs</h2>
+<table class="about-table">
+<colgroup><col style="width:25%"><col style="width:75%"></colgroup>
+<thead><tr><th>Tab</th><th>What It Shows</th></tr></thead>
+<tbody>
+<tr><td><strong>Rankings</strong></td><td>Season-level PS% for every player, with full shooting splits (FG, 3P, 2P, FT), sortable and filterable.</td></tr>
+<tr><td><strong>Foul Profile</strong></td><td>How each player&rsquo;s scoring events break down by type. Shows the composition of a player&rsquo;s scoring, not just the efficiency.</td></tr>
+<tr><td><strong>FT by Type</strong></td><td>Free throw make rate broken out by the type of foul that produced the free throws. This data is not available from any other public source.</td></tr>
+<tr><td><strong>All Game Logs</strong></td><td>Individual game performances with per-game PS%, TS%, and Delta. Use the delta slider to filter to high-distortion games, and the quarter filter to view quarter-level efficiency breakdowns.</td></tr>
+</tbody>
+</table>
+
+<h2>Data Source &amp; Methodology</h2>
+<p><strong>Data source:</strong> PS% is calculated across all 47 seasons (1979-80 through 2025-26) using box score data (PTS, FGA, 3PA, FTA). Play-by-play component data (foul profiles, And-1 rates, hidden possessions) is available for 30 seasons: 6 via NBA CDN (2020-21 through 2025-26) and 24 via Basketball Reference (1996-97 through 2019-20). The remaining 17 seasons (1979-80 through 1995-96) have headline PS% but no PBP component breakdowns.</p>
+<p>Season-level stats are aggregated from raw totals across all games, not averaged from per-game percentages. A 40-point game and a 2-point game contribute proportionally to the season number.</p>
+
+</div><!-- /subtab-methodology -->
+
+<div class="about-subtab-pane" id="subtab-historical">
+
+<h2>47 Seasons of Evidence (1979-80 to 2025-26)</h2>
+<p>The distortion between TS% and PS% is not a recent phenomenon. It has grown steadily since the introduction of the 3-point line in 1979-80, tracking almost perfectly with the league-wide 3-point attempt rate.</p>
+<table class="about-table" id="evidenceTable">
+<thead><tr><th>Season</th><th>3PA Rate</th><th>PS%</th><th>TS%</th><th>Delta</th></tr></thead>
+<tbody id="evidenceBody"></tbody>
+</table>
+
+<div style="position:relative;display:inline-block;margin:20px 0;">
+  <canvas id="seasonScatterCanvas" width="700" height="420" style="background:#0d1117;border-radius:4px;display:block;"></canvas>
+  <div id="seasonScatterTooltip" style="display:none;position:absolute;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:6px 10px;font-size:12px;color:#c9d1d9;pointer-events:none;white-space:nowrap;z-index:10;"></div>
+</div>
+
+</div><!-- /subtab-historical -->
+
+<div class="about-subtab-pane" id="subtab-crossera">
+
+<h2>Cross-Era Comparison</h2>
+<p>TS% comparisons across eras are increasingly unreliable as 3PA rates diverge. The scatter below plots each player-season by 3-point attempt rate vs. distortion:</p>
+<div style="position:relative;display:inline-block;margin:12px 0 20px 0;">
+  <canvas id="eraScatterCanvas" width="700" height="420" style="background:#0d1117;border-radius:4px;display:block;"></canvas>
+  <div id="eraScatterHeadshots" style="position:absolute;top:0;left:0;width:700px;height:420px;pointer-events:none;overflow:hidden;"></div>
+  <div id="eraScatterTooltip" style="display:none;position:absolute;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:6px 10px;font-size:12px;color:#c9d1d9;pointer-events:none;white-space:nowrap;z-index:10;"></div>
+</div>
+<p>Here is the same data in table form:</p>
+<table class="about-table" id="eraCompTable">
+<thead><tr><th>Player</th><th>Season</th><th>3PA Rate</th><th>PS%</th><th>TS%</th><th>Delta</th></tr></thead>
+<tbody id="eraCompBody"></tbody>
+</table>
+
+</div><!-- /subtab-crossera -->
+
+</div>
+</div>
+
+<script>
+// =====================================================================
+// SECTION 1: EMBEDDED DATA
+// =====================================================================
+const PLAYERS     = /*PLAYERS_DATA*/;
+const PERGAME     = /*PERGAME_DATA*/;
+const COMPS       = /*COMPS_DATA*/;
+const SEASON_META = /*SEASON_META*/;
+const SEASONS     = /*SEASONS_LIST*/;
+const ERA_COMP    = /*ERA_COMPARISON*/;
+
+// Compute derived fields
+Object.keys(PLAYERS).forEach(function(s) {
+  (PLAYERS[s] || []).forEach(function(p) {
+    p.ppg = (p.games_played > 0) ? Math.round(p.total_pts / p.games_played * 10) / 10 : null;
+  });
+});
+
+// =====================================================================
+// SECTION 2: COLUMN DEFINITIONS
+// =====================================================================
+// Each tab defines its columns as an ordered array. Each column has:
+//   key       — data field name (or _rank / _bar for computed columns)
+//   label     — display header text
+//   tooltip   — hover tooltip text
+//   locked    — if true, cannot be hidden via column manager
+//   sortable  — if false, clicking header does not sort (default true)
+//   fmt       — formatting type: "int", "pct", "delta", "str", "bar"
+//   style     — optional color function: "pure", "delta", "ft"
+
+const COL_DEFS = {
+  rankings: [
+    { key: "_rank",             label: "#",              tooltip: "Rank within current filter and sort", locked: true, sortable: false, fmt: "rank" },
+    { key: "player_name",       label: "Player",         tooltip: "Player full name", locked: true, fmt: "player" },
+    { key: "team_abbr",         label: "Team",           tooltip: "Current team abbreviation", locked: true, fmt: "team" },
+    { key: "_season",           label: "Season",         tooltip: "NBA season", fmt: "str" },
+    { key: "games_played",      label: "GP",             tooltip: "Games Played \u2014 total games with scoring possessions this season", fmt: "int" },
+    { key: "total_pts",         label: "PTS",            tooltip: "Points \u2014 total points scored", fmt: "int" },
+    { key: "ppg",               label: "PPG",            tooltip: "Points Per Game \u2014 PTS / GP", fmt: "dec1" },
+    { key: "max_possible_pts",  label: "Max PTS",        tooltip: "Max Possible Points \u2014 the denominator of PS%: 2\u00d7FGA + 3PA + FTA", fmt: "int" },
+    { key: "pure_ts_pct",       label: "PS%",            tooltip: "Pure Shooting % \u2014 PTS / (2\u00d7FGA + 3PA + FTA), points scored divided by max possible points", fmt: "pct", style: "pure" },
+    { key: "standard_ts_pct",   label: "TS%",             tooltip: "True Shooting % \u2014 PTS / (2 x (FGA + 0.44 x FTA)), the traditional approximation-based formula", fmt: "pct" },
+    { key: "delta_pp",          label: "Delta",          tooltip: "Delta \u2014 PS% minus TS% in percentage points. Negative means TS% overrates the player's efficiency", fmt: "delta", style: "delta" },
+    { key: "total_fgm",         label: "FGM",            tooltip: "Field Goals Made", fmt: "int" },
+    { key: "total_fga",         label: "FGA",            tooltip: "Field Goal Attempts (includes And-1 makes, excludes shooting fouls)", fmt: "int" },
+    { key: "fg_pct",            label: "FG%",            tooltip: "Field Goal Percentage \u2014 FGM / FGA", fmt: "pct" },
+    { key: "total_3pm",         label: "3PM",            tooltip: "3-Point Field Goals Made", fmt: "int" },
+    { key: "total_3pa",         label: "3PA",            tooltip: "3-Point Field Goal Attempts", fmt: "int" },
+    { key: "three_pct",         label: "3P%",            tooltip: "3-Point Field Goal Percentage", fmt: "pct" },
+    { key: "total_2pm",         label: "2PM",            tooltip: "2-Point Field Goals Made", fmt: "int" },
+    { key: "total_2pa",         label: "2PA",            tooltip: "2-Point Field Goal Attempts", fmt: "int" },
+    { key: "two_pct",           label: "2P%",            tooltip: "2-Point Field Goal Percentage", fmt: "pct" },
+    { key: "ft_overall_ftm",    label: "FTM",            tooltip: "Free Throws Made \u2014 from all foul types", fmt: "int" },
+    { key: "ft_overall_fta",    label: "FTA",            tooltip: "Free Throw Attempts \u2014 from all foul types", fmt: "int" },
+    { key: "ft_overall_pct",    label: "FT%",            tooltip: "Free Throw Percentage \u2014 overall FTM / FTA", fmt: "pct" },
+    { key: "total_scoring_poss",label: "SP",             tooltip: "Scoring Possessions \u2014 every opportunity where the player attempted to score (FGA + shooting fouls + bonus fouls + tech FTs + etc.)", fmt: "int" },
+    { key: "hidden_poss",       label: "Hidden Poss",    tooltip: "Hidden Possessions \u2014 scoring events that produced zero FGAs in the box score", fmt: "int" },
+    { key: "hidden_poss_pct",   label: "Hidden Poss %",  tooltip: "Hidden Possessions % \u2014 hidden possessions as a share of total scoring possessions", fmt: "pct" },
+  ],
+
+  foulprofile: [
+    { key: "_rank",             label: "#",              tooltip: "Rank within current filter and sort", locked: true, sortable: false, fmt: "rank" },
+    { key: "player_name",       label: "Player",         tooltip: "Player full name", locked: true, fmt: "player" },
+    { key: "team_abbr",         label: "Team",           tooltip: "Current team abbreviation", locked: true, fmt: "team" },
+    { key: "total_scoring_poss",label: "SP",             tooltip: "Scoring Possessions \u2014 total scoring possessions this season", fmt: "int" },
+    { key: "fp_clean2",         label: "Clean 2PT %",    tooltip: "Clean 2PT FGA % \u2014 share of scoring possessions that were 2-point field goal attempts with no foul", fmt: "pct" },
+    { key: "fp_clean2_n",       label: "Clean 2PT",      tooltip: "Clean 2PT FGA count", fmt: "int" },
+    { key: "fp_clean3",         label: "Clean 3PT %",    tooltip: "Clean 3PT FGA % \u2014 share of scoring possessions that were 3-point field goal attempts with no foul", fmt: "pct" },
+    { key: "fp_clean3_n",       label: "Clean 3PT",      tooltip: "Clean 3PT FGA count", fmt: "int" },
+    { key: "fp_sf2",            label: "2PT SF %",       tooltip: "2PT Shooting Foul % \u2014 share from fouls on 2-point shot attempts (shot didn't go in, 2 FTAs)", fmt: "pct" },
+    { key: "fp_sf2_n",          label: "2PT SF",         tooltip: "2PT Shooting Foul count", fmt: "int" },
+    { key: "fp_sf3",            label: "3PT SF %",       tooltip: "3PT Shooting Foul % \u2014 share from fouls on 3-point shot attempts (shot didn't go in, 3 FTAs)", fmt: "pct" },
+    { key: "fp_sf3_n",          label: "3PT SF",         tooltip: "3PT Shooting Foul count", fmt: "int" },
+    { key: "fp_and1",           label: "And-1s %",       tooltip: "And-1 % \u2014 share from plays where the player made the FG AND was fouled", fmt: "pct" },
+    { key: "fp_and1_n",         label: "And-1s",         tooltip: "And-1 count", fmt: "int" },
+    { key: "fp_penalty",        label: "Penalty FTs %",  tooltip: "Penalty FTs % \u2014 share from non-shooting fouls: techs, flagrants, clear path, take fouls, away-from-play, bonus fouls", fmt: "pct" },
+    { key: "fp_penalty_n",      label: "Penalty FTs",    tooltip: "Penalty FTs count", fmt: "int" },
+    { key: "and1_rate",         label: "And-1 Rate",     tooltip: "And-1 Rate \u2014 percentage of made field goals that resulted in an And-1", fmt: "pct" },
+    { key: "foul_draw_rate",    label: "Foul Draw Rate", tooltip: "Foul Draw Rate \u2014 percentage of scoring possessions that involved a foul", fmt: "pct" },
+    { key: "_bar",              label: "Distribution",   tooltip: "Visual breakdown \u2014 blue = clean 2PT, green = clean 3PT, orange = 2PT SF, yellow = 3PT SF, purple = And-1s, gray = penalty FTs", sortable: false, fmt: "bar" },
+  ],
+
+  fttype: [
+    { key: "_rank",             label: "#",              tooltip: "Rank within current filter and sort", locked: true, sortable: false, fmt: "rank" },
+    { key: "player_name",       label: "Player",         tooltip: "Player full name", locked: true, fmt: "player" },
+    { key: "team_abbr",         label: "Team",           tooltip: "Current team abbreviation", locked: true, fmt: "team" },
+    { key: "total_scoring_poss",label: "SP",             tooltip: "Scoring Possessions \u2014 total scoring possessions this season", fmt: "int" },
+    { key: "ft_overall_pct",    label: "Overall FT%",    tooltip: "Overall FT% \u2014 free throw make rate across all foul types combined", fmt: "pct", style: "ft" },
+    { key: "ft_overall_ftm",    label: "Overall FTM",    tooltip: "Overall free throws made", fmt: "int" },
+    { key: "ft_overall_fta",    label: "Overall FTA",    tooltip: "Overall free throw attempts", fmt: "int" },
+    { key: "ft_shooting_pct",   label: "SF %",           tooltip: "Shooting Foul FT% \u2014 make rate on 2PT and 3PT shooting fouls", fmt: "pct", style: "ft" },
+    { key: "ft_shooting_ftm",   label: "SF FTM",         tooltip: "Shooting foul free throws made", fmt: "int" },
+    { key: "ft_shooting_fta",   label: "SF FTA",         tooltip: "Shooting foul free throw attempts", fmt: "int" },
+    { key: "ft_and1_pct",       label: "And-1 %",        tooltip: "And-1 FT% \u2014 make rate on the bonus free throw after making a field goal while fouled", fmt: "pct", style: "ft" },
+    { key: "ft_and1_ftm",       label: "A1 FTM",         tooltip: "And-1 free throws made", fmt: "int" },
+    { key: "ft_and1_fta",       label: "A1 FTA",         tooltip: "And-1 free throw attempts", fmt: "int" },
+    { key: "ft_bonus_pct",      label: "Bonus %",        tooltip: "Bonus Foul FT% \u2014 make rate on non-shooting personal fouls in the penalty", fmt: "pct", style: "ft" },
+    { key: "ft_bonus_ftm",      label: "Bonus FTM",      tooltip: "Bonus foul free throws made", fmt: "int" },
+    { key: "ft_bonus_fta",      label: "Bonus FTA",      tooltip: "Bonus foul free throw attempts", fmt: "int" },
+    { key: "ft_tech_pct",       label: "Tech %",         tooltip: "Tech FT% \u2014 make rate on technical foul free throws", fmt: "pct", style: "ft" },
+    { key: "ft_tech_ftm",       label: "Tech FTM",       tooltip: "Technical foul free throws made", fmt: "int" },
+    { key: "ft_tech_fta",       label: "Tech FTA",       tooltip: "Technical foul free throw attempts", fmt: "int" },
+  ],
+
+  distortion: [
+    { key: "_rank",             label: "#",              tooltip: "Rank by absolute delta (biggest distortions first)", locked: true, sortable: false, fmt: "rank" },
+    { key: "player_name",       label: "Player",         tooltip: "Player full name", locked: true, fmt: "player" },
+    { key: "team_abbr",         label: "Team",           tooltip: "Current team abbreviation", locked: true, fmt: "team" },
+    { key: "game_date",         label: "Date",           tooltip: "Game date", fmt: "str" },
+    { key: "opponent",          label: "Opp",            tooltip: "Opponent team", fmt: "str" },
+    // Box score columns — available in both full-game and quarter views via effCol remapping
+    { key: "pts",               label: "PTS",            tooltip: "Points scored", fmt: "int", effCol: "pts" },
+    { key: "g_max_pts",         label: "Max PTS",        tooltip: "Max Possible Points \u2014 2\u00d7FGA + 3PA + FTA", fmt: "int", effCol: "g_max_pts" },
+    // Efficiency columns — keys are dynamic based on quarter filter
+    { key: "pure_ts_pct",       label: "PS%",            tooltip: "PS%", fmt: "pct", style: "pure", effCol: "pure_ts" },
+    { key: "standard_ts_pct",   label: "TS%",             tooltip: "TS%", fmt: "pct", effCol: "std_ts" },
+    { key: "delta_pp",          label: "Delta",          tooltip: "Delta \u2014 gap between PS% and TS%", fmt: "delta", style: "delta", effCol: "delta" },
+    { key: "fgm",               label: "FGM",            tooltip: "Field goals made", fmt: "int", effCol: "fgm" },
+    { key: "fga",               label: "FGA",            tooltip: "Field goal attempts", fmt: "int", effCol: "fga" },
+    { key: "g_fgpct",           label: "FG%",            tooltip: "Field goal percentage", fmt: "pct", effCol: "g_fgpct" },
+    { key: "g_3pm",             label: "3PM",            tooltip: "3-point field goals made", fmt: "int", effCol: "g_3pm" },
+    { key: "g_3pa",             label: "3PA",            tooltip: "3-point field goal attempts", fmt: "int", effCol: "g_3pa" },
+    { key: "g_3pct",            label: "3P%",            tooltip: "3-point percentage", fmt: "pct", effCol: "g_3pct" },
+    { key: "g_2pm",             label: "2PM",            tooltip: "2-point field goals made", fmt: "int", effCol: "g_2pm" },
+    { key: "g_2pa",             label: "2PA",            tooltip: "2-point field goal attempts", fmt: "int", effCol: "g_2pa" },
+    { key: "g_2pct",            label: "2P%",            tooltip: "2-point percentage", fmt: "pct", effCol: "g_2pct" },
+    { key: "ftm",               label: "FTM",            tooltip: "Free throws made", fmt: "int", effCol: "ftm" },
+    { key: "fta",               label: "FTA",            tooltip: "Free throw attempts", fmt: "int", effCol: "fta" },
+    { key: "g_ftpct",           label: "FT%",            tooltip: "Free throw percentage", fmt: "pct", effCol: "g_ftpct" },
+    // SP column — key is dynamic based on quarter filter
+    { key: "scoring_poss",      label: "SP",             tooltip: "Scoring Possessions in this game", fmt: "int", spCol: true },
+    { key: "g_hidden",          label: "Hidden Poss",    tooltip: "Hidden Possessions \u2014 scoring events with 0 FGA", fmt: "int", fullGameOnly: true },
+    { key: "g_hidden_pct",      label: "Hidden Poss %",  tooltip: "Hidden Possessions as % of total scoring possessions", fmt: "pct", fullGameOnly: true },
+    { key: "g_sf_ftm",          label: "SF FTM",         tooltip: "Shooting foul free throws made", fmt: "int", fullGameOnly: true },
+    { key: "g_sf_fta",          label: "SF FTA",         tooltip: "Shooting foul free throw attempts", fmt: "int", fullGameOnly: true },
+    { key: "g_a1_ftm",          label: "A1 FTM",         tooltip: "And-1 free throws made", fmt: "int", fullGameOnly: true },
+    { key: "g_a1_fta",          label: "A1 FTA",         tooltip: "And-1 free throw attempts", fmt: "int", fullGameOnly: true },
+    { key: "g_bonus_ftm",       label: "Bonus FTM",      tooltip: "Bonus foul free throws made", fmt: "int", fullGameOnly: true },
+    { key: "g_bonus_fta",       label: "Bonus FTA",      tooltip: "Bonus foul free throw attempts", fmt: "int", fullGameOnly: true },
+    { key: "g_tech_ftm",        label: "Tech FTM",       tooltip: "Technical foul free throws made", fmt: "int", fullGameOnly: true },
+    { key: "g_tech_fta",        label: "Tech FTA",       tooltip: "Technical foul free throw attempts", fmt: "int", fullGameOnly: true },
+  ],
+};
+
+// =====================================================================
+// SECTION 3: STATE MANAGEMENT
+// =====================================================================
+let activeTab = "rankings";
+var currentSeason = SEASONS[0];
+
+var _allPlayersCache = null;
+function _buildAllPlayers() {
+  if (_allPlayersCache) return _allPlayersCache;
+  var all = [];
+  SEASONS.forEach(function(s) {
+    if (s.endsWith("-PO")) return; // Exclude playoffs from All Seasons
+    (PLAYERS[s] || []).forEach(function(p) {
+      var copy = Object.assign({}, p);
+      copy._season = s;
+      all.push(copy);
+    });
+  });
+  _allPlayersCache = all;
+  return all;
+}
+
+function getPlayers() {
+  if (currentSeason === "ALL") return _buildAllPlayers();
+  return PLAYERS[currentSeason] || [];
+}
+function getPergame() { return PERGAME[currentSeason] || []; }
+
+// --- Async pergame loader (split mode) ---
+var _pergameLoading = {};  // season -> true while fetching
+
+function ensurePergame(season, callback) {
+  // Already loaded
+  if (PERGAME[season] && PERGAME[season].length > 0) {
+    callback();
+    return;
+  }
+  // No game logs for this season
+  var meta = SEASON_META[season] || {};
+  if (!meta.has_pbp) {
+    callback();
+    return;
+  }
+  // Already fetching
+  if (_pergameLoading[season]) return;
+  _pergameLoading[season] = true;
+
+  // Show loading state
+  var body = document.getElementById("body-distortion");
+  if (body) body.innerHTML = '<tr><td colspan="20" style="text-align:center;padding:40px;color:#8b949e;">Loading game logs\u2026</td></tr>';
+
+  fetch("data/" + season + ".json")
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      PERGAME[season] = data;
+      delete _pergameLoading[season];
+      callback();
+    })
+    .catch(function(err) {
+      delete _pergameLoading[season];
+      if (body) body.innerHTML = '<tr><td colspan="20" style="text-align:center;padding:40px;color:#e74c3c;">Failed to load game logs. <a href="javascript:void(0)" onclick="ensurePergame(\'' + season + '\', render)">Retry</a></td></tr>';
+    });
+}
+
+var tabState = {
+  rankings:    { sortKey: "pure_ts_pct",        sortDir: -1, sorts: [{key: "pure_ts_pct", dir: -1}], expanded: null },
+  foulprofile: { sortKey: "total_scoring_poss",  sortDir: -1, sorts: [{key: "total_scoring_poss", dir: -1}] },
+  fttype:      { sortKey: "total_scoring_poss",  sortDir: -1, sorts: [{key: "total_scoring_poss", dir: -1}] },
+  distortion:  { sortKey: "_absDelta",           sortDir: -1, sorts: [{key: "_absDelta", dir: -1}], limit: 500, deltaThreshold: 0, quarterFilter: "all" },
+};
+
+// Per-tab column visibility and order state
+const colState = {};
+function initColState() {
+  for (var tab in COL_DEFS) {
+    colState[tab] = {
+      order: COL_DEFS[tab].map(function(_, i) { return i; }),
+      hidden: new Set(),
+      filters: {},  // key -> { type:'text', checked:Set } or { type:'num', min:N, max:N }
+    };
+  }
+}
+initColState();
+// Hide Season column by default (shown only in All Seasons mode)
+if (colState.rankings) colState.rankings.hidden.add("_season");
+
+function getVisibleCols(tab) {
+  var defs = COL_DEFS[tab];
+  var st = colState[tab];
+  return st.order.map(function(i) { return defs[i]; }).filter(function(c) { return !st.hidden.has(c.key); });
+}
+
+function hasActiveFilter(tab, key) {
+  return colState[tab] && colState[tab].filters.hasOwnProperty(key);
+}
+
+function hasAnyFilter(tab) {
+  return colState[tab] && Object.keys(colState[tab].filters).length > 0;
+}
+
+// =====================================================================
+// SECTION 4: DOM REFERENCES
+// =====================================================================
+var searchEl      = document.getElementById("search");
+var seasonSelectEl= document.getElementById("seasonSelect");
+var minPossEl     = document.getElementById("minPoss");
+var minPossValEl  = document.getElementById("minPossVal");
+var minPossLabel  = document.getElementById("minPossLabelText");
+var playerCountEl = document.getElementById("playerCount");
+var filterPanel   = document.getElementById("filterPanel");
+var resetAllBtn   = document.getElementById("resetAllBtn");
+var pageTitleEl   = document.getElementById("pageTitle");
+var subtitleDelta = document.getElementById("subtitleDelta");
+
+// =====================================================================
+// SECTION 5: UTILITY / FORMATTING FUNCTIONS
+// =====================================================================
+function pureColor(v) {
+  if (v == null) return "";
+  const t = Math.max(0, Math.min(1, (v - 30) / 40));
+  return "rgb(" + Math.round(220-t*170) + "," + Math.round(60+t*160) + "," + Math.round(60+t*40) + ")";
+}
+function deltaColor(v) {
+  if (v == null) return "";
+  const t = Math.min(1, Math.abs(v) / 15);
+  return "rgb(" + Math.round(80+t*160) + "," + Math.round(80-t*40) + "," + Math.round(80-t*40) + ")";
+}
+function ftColor(v) {
+  if (v == null) return "";
+  const t = Math.max(0, Math.min(1, (v - 40) / 50));
+  return "rgb(" + Math.round(220-t*170) + "," + Math.round(60+t*160) + "," + Math.round(60+t*40) + ")";
+}
+function fmtPct(v)   { return v != null ? v.toFixed(1) + "%" : "\u2014"; }
+function fmtInt(v)   { return v != null ? v : "\u2014"; }
+function fmtDec1(v)  { return v != null ? v.toFixed(1) : "\u2014"; }
+function fmtDelta(v) {
+  if (v == null) return "\u2014";
+  return (v >= 0 ? "+" : "") + v.toFixed(1) + "pp";
+}
+
+// Enrich per-game rows with derived stats from component data
+function enrichPergameRow(g) {
+  if (g._enriched) return;
+  var ev = function(c) { return g[c + "_events"] || 0; };
+  var pts = function(c) { return g[c + "_pts"] || 0; };
+
+  // 3PM/3PA (clean 3PT makes + And-1 3PT makes)
+  var clean3m = pts("C1b") ? pts("C1b") / 3 : 0;
+  g.g_3pm = Math.round(clean3m + ev("C5"));
+  g.g_3pa = ev("C1b") + ev("C5");
+  g.g_3pct = g.g_3pa > 0 ? Math.round(g.g_3pm / g.g_3pa * 1000) / 10 : null;
+
+  // 2PM/2PA
+  var clean2m = pts("C1a") ? pts("C1a") / 2 : 0;
+  g.g_2pm = Math.round(clean2m + ev("C4"));
+  g.g_2pa = ev("C1a") + ev("C4");
+  g.g_2pct = g.g_2pa > 0 ? Math.round(g.g_2pm / g.g_2pa * 1000) / 10 : null;
+
+  // FG%
+  g.g_fgpct = g.fga > 0 ? Math.round(g.fgm / g.fga * 1000) / 10 : null;
+
+  // Max Possible Points
+  g.g_max_pts = 2 * (g.fga || 0) + (g.g_3pa || 0) + (g.fta || 0);
+
+  // FT breakdown by type
+  g.g_sf_ftm = pts("C2") + pts("C3");
+  g.g_sf_fta = ev("C2") * 2 + ev("C3") * 3;
+  var a1_ftm = Math.max(0, pts("C4") - ev("C4") * 2) + Math.max(0, pts("C5") - ev("C5") * 3);
+  g.g_a1_ftm = Math.round(a1_ftm);
+  g.g_a1_fta = ev("C4") + ev("C5");
+  g.g_bonus_ftm = pts("C6f");
+  g.g_bonus_fta = ev("C6f") * 2;
+  g.g_tech_ftm = pts("C6a");
+  g.g_tech_fta = ev("C6a");
+
+  // Hidden possessions (scoring possessions with 0 FGA)
+  g.g_hidden = ev("C2") + ev("C3") + ev("C6a") + ev("C6b") + ev("C6c") + ev("C6d") + ev("C6e") + ev("C6f");
+  var sp = g.scoring_poss || 0;
+  g.g_hidden_pct = sp > 0 ? Math.round(g.g_hidden / sp * 1000) / 10 : null;
+
+  // And-1 rate
+  var totalFgm = g.fgm || 0;
+  var and1s = ev("C4") + ev("C5");
+  g.g_and1_rate = totalFgm > 0 ? Math.round(and1s / totalFgm * 1000) / 10 : null;
+
+  // Foul draw rate
+  var fouls = ev("C2") + ev("C3") + ev("C4") + ev("C5") + ev("C6a") + ev("C6b") + ev("C6c") + ev("C6d") + ev("C6e") + ev("C6f");
+  g.g_foul_draw = sp > 0 ? Math.round(fouls / sp * 1000) / 10 : null;
+
+  // FT%
+  g.g_ftpct = g.fta > 0 ? Math.round(g.ftm / g.fta * 1000) / 10 : null;
+
+  // Per-quarter derived fields
+  for (var qi = 1; qi <= 4; qi++) {
+    var qp = "q" + qi + "_";
+    var qfga = g[qp + "fga"] || 0;
+    var qfgm = g[qp + "fgm"] || 0;
+    var qfg3a = g[qp + "fg3a"] || 0;
+    var qfg3m = g[qp + "fg3m"] || 0;
+    var qfta = g[qp + "fta"] || 0;
+    var qftm = g[qp + "ftm"] || 0;
+    var q2pa = qfga - qfg3a;
+    var q2pm = qfgm - qfg3m;
+    g[qp + "g_fgpct"] = qfga > 0 ? Math.round(qfgm / qfga * 1000) / 10 : null;
+    g[qp + "g_3pm"] = qfg3m;
+    g[qp + "g_3pa"] = qfg3a;
+    g[qp + "g_3pct"] = qfg3a > 0 ? Math.round(qfg3m / qfg3a * 1000) / 10 : null;
+    g[qp + "g_2pm"] = q2pm;
+    g[qp + "g_2pa"] = q2pa;
+    g[qp + "g_2pct"] = q2pa > 0 ? Math.round(q2pm / q2pa * 1000) / 10 : null;
+    g[qp + "g_ftpct"] = qfta > 0 ? Math.round(qftm / qfta * 1000) / 10 : null;
+    g[qp + "g_max_pts"] = 2 * qfga + qfg3a + qfta;
+  }
+
+  g._enriched = true;
+}
+
+function cellStyle(col, val) {
+  if (!col.style || val == null) return "";
+  if (col.style === "pure")  return ' style="font-weight:600;color:' + pureColor(val) + '"';
+  if (col.style === "delta") return ' style="font-weight:600;color:' + deltaColor(val) + '"';
+  if (col.style === "ft")    return ' style="color:' + ftColor(val) + '"';
+  return "";
+}
+
+function formatCell(col, row, rowIdx) {
+  const val = row[col.key];
+  switch (col.fmt) {
+    case "rank":    return rowIdx + 1;
+    case "player":  return row.player_name || "\u2014";
+    case "team":    return row.team_abbr || "\u2014";
+    case "int":     return fmtInt(val);
+    case "dec1":    return fmtDec1(val);
+    case "pct":     return fmtPct(val);
+    case "delta":   return fmtDelta(val);
+    case "str":     return val || "\u2014";
+    case "bar":     return buildStackedBar(row);
+    default:        return val != null ? val : "\u2014";
+  }
+}
+
+function tdClass(col) {
+  if (col.fmt === "player") return "player-name";
+  if (col.fmt === "team")   return "team";
+  return "num";
+}
+
+function buildStackedBar(p) {
+  const vals = [
+    { pct: p.fp_clean2 || 0, cls: "bar-clean2" },
+    { pct: p.fp_clean3 || 0, cls: "bar-clean3" },
+    { pct: p.fp_sf2    || 0, cls: "bar-sf2" },
+    { pct: p.fp_sf3    || 0, cls: "bar-sf3" },
+    { pct: p.fp_and1   || 0, cls: "bar-and1" },
+    { pct: p.fp_penalty|| 0, cls: "bar-penalty" },
+  ];
+  let bar = '<div class="stacked-bar">';
+  vals.forEach(function(v) {
+    if (v.pct > 0) bar += '<div class="seg ' + v.cls + '" style="width:' + v.pct + '%"></div>';
+  });
+  return bar + '</div>';
+}
+
+function _cmpVal(row, key) {
+  if (key === "_absDelta") {
+    var qf = tabState.distortion ? (tabState.distortion.quarterFilter || "all") : "all";
+    var deltaKey = qf === "all" ? "delta_pp" : qf + "_delta";
+    return Math.abs(row[deltaKey] || 0);
+  }
+  return row[key];
+}
+
+function _cmpOne(a, b, key, dir) {
+  var va = _cmpVal(a, key), vb = _cmpVal(b, key);
+  if (va == null) va = -Infinity;
+  if (vb == null) vb = -Infinity;
+  if (key === "game_date" && typeof va === "string" && typeof vb === "string") {
+    var da = new Date(va), db = new Date(vb);
+    if (!isNaN(da) && !isNaN(db)) return dir * (da - db);
+  }
+  if (typeof va === "string") return dir * va.localeCompare(vb);
+  return dir * (va - vb);
+}
+
+function sortArr(arr, key, dir) {
+  return arr.slice().sort(function(a, b) {
+    return _cmpOne(a, b, key, dir);
+  });
+}
+
+function sortMulti(arr, sorts) {
+  if (!sorts || sorts.length === 0) return arr.slice();
+  return arr.slice().sort(function(a, b) {
+    for (var i = 0; i < sorts.length; i++) {
+      var c = _cmpOne(a, b, sorts[i].key, sorts[i].dir);
+      if (c !== 0) return c;
+    }
+    return 0;
+  });
+}
+
+// =====================================================================
+// SECTION 6: FILTERING (toolbar + column filters)
+// =====================================================================
+function applyColFilters(row, tab) {
+  if (!colState[tab]) return true;
+  var filters = colState[tab].filters;
+  for (var key in filters) {
+    var f = filters[key];
+    var val = row[key];
+    if (f.type === "text") {
+      var sv = (val != null ? String(val) : "");
+      if (!f.checked.has(sv)) return false;
+    } else if (f.type === "num") {
+      var nv = (val != null ? val : -Infinity);
+      if (f.min != null && nv < f.min) return false;
+      if (f.max != null && nv > f.max) return false;
+    }
+  }
+  return true;
+}
+
+function getMinPossValue(p) {
+  // In All Seasons mode, always use FGA for consistency across eras.
+  // For single PBP seasons, use scoring possessions. For box-score-only, use FGA.
+  if (currentSeason === "ALL") return (p.total_fga || 0);
+  var sp = p.total_scoring_poss || 0;
+  if (sp > 0) return sp;
+  return (p.total_fga || 0);
+}
+
+function filterPlayers() {
+  var q = searchEl.value.toLowerCase().trim();
+  var minP = parseInt(minPossEl.value) || 0;
+  var filterTab = (activeTab === "charts") ? "rankings" : activeTab;
+  return getPlayers().filter(function(p) {
+    if (getMinPossValue(p) < minP) return false;
+    if (q && !p.player_name.toLowerCase().includes(q) &&
+        !(p.team_abbr || "").toLowerCase().includes(q)) return false;
+    if (!applyColFilters(p, filterTab)) return false;
+    return true;
+  });
+}
+
+function filterPergame() {
+  var q = searchEl.value.toLowerCase().trim();
+  var minP = parseInt(minPossEl.value) || 0;
+  var st = tabState.distortion;
+  var deltaThresh = st.deltaThreshold || 0;
+  var qf = st.quarterFilter || "all";
+  return getPergame().filter(function(g) {
+    // Min possessions filter: use quarter-specific SP if a quarter is selected
+    var sp = qf === "all" ? (g.scoring_poss || 0) : (g[qf + "_sp"] || 0);
+    if (sp < minP) return false;
+    // Delta filter: use quarter-specific delta if a quarter is selected
+    var delta = qf === "all" ? (g.delta_pp || 0) : (g[qf + "_delta"] || 0);
+    if (deltaThresh > 0 && Math.abs(delta) < deltaThresh) return false;
+    if (q && !(g.player_name || "").toLowerCase().includes(q) &&
+        !(g.team_abbr || "").toLowerCase().includes(q)) return false;
+    if (!applyColFilters(g, "distortion")) return false;
+    return true;
+  });
+}
+
+// =====================================================================
+// SECTION 7: GENERIC TABLE RENDERING
+// =====================================================================
+function renderHeader(tab) {
+  var cols = getVisibleCols(tab);
+  var st = tabState[tab];
+  var hdr = document.getElementById("hdr-" + tab);
+  var html = "";
+  cols.forEach(function(col) {
+    var sortCls = "";
+    var sortBadge = "";
+    var sorts = st.sorts || [];
+    if (sorts.length > 0 && col.key === sorts[0].key) {
+      sortCls = sorts[0].dir === 1 ? " sorted-asc" : " sorted-desc";
+      if (sorts.length > 1) sortBadge = ' <span style="font-size:9px;opacity:0.6">1st</span>';
+    } else if (sorts.length > 1 && col.key === sorts[1].key) {
+      sortCls = sorts[1].dir === 1 ? " sorted-asc" : " sorted-desc";
+      sortBadge = ' <span style="font-size:9px;opacity:0.6">2nd</span>';
+    }
+    var filtered = hasActiveFilter(tab, col.key);
+    var arrowCls = "filter-arrow" + (filtered ? " active" : "");
+    var showArrow = (col.key !== "_rank" && col.key !== "_bar");
+    var arrow = showArrow ? ' <span class="' + arrowCls + '" data-fcol="' + col.key + '">\u25BC</span>' : '';
+    html += '<th class="' + sortCls + '" data-key="' + col.key + '"' +
+            ' data-tooltip="' + (col.tooltip || "") + '"' +
+            ' draggable="true">' +
+            '<span class="th-inner"><span class="th-label">' + col.label + sortBadge + '</span>' + arrow + '</span></th>';
+  });
+  hdr.innerHTML = html;
+  attachDragHandlers(tab);
+}
+
+function renderRows(tab, data) {
+  var cols = getVisibleCols(tab);
+  var html = "";
+  var isRankings = tab === "rankings";
+  var st = tabState[tab];
+
+  data.forEach(function(row, i) {
+    var expanded = isRankings && st.expanded === row.player_id;
+    var trCls = isRankings ? ('class="clickable' + (expanded ? ' expanded' : '') + '" data-pid="' + row.player_id + '"') : "";
+    html += "<tr " + trCls + ">";
+    cols.forEach(function(col) {
+      var val = row[col.key];
+      var cls = tdClass(col);
+      var sty = cellStyle(col, val);
+      html += '<td class="' + cls + '"' + sty + '>' + formatCell(col, row, i) + '</td>';
+    });
+    html += "</tr>";
+    if (expanded) {
+      html += '<tr class="detail-row"><td colspan="' + cols.length + '">' + buildDetailHtml(row) + '</td></tr>';
+    }
+  });
+  return html;
+}
+
+// Component detail panel (rankings expand)
+function buildDetailHtml(p) {
+  var html = '<div class="detail-panel">';
+  html += '<div class="detail-header">Component Breakdown \u2014 ' + p.player_name + '</div>';
+  for (var ci = 0; ci < COMPS.length; ci++) {
+    var id = COMPS[ci][0], name = COMPS[ci][1];
+    var ev = p[id + "_events"] || 0;
+    var pts = p[id + "_pts"] || 0;
+    var eff = p[id + "_eff"];
+    var zero = ev === 0;
+    var effStr = (eff != null && eff !== "" && !zero)
+      ? '<span class="eff">' + parseFloat(eff).toFixed(1) + '%</span>' : '';
+    html += '<div class="comp-item' + (zero ? ' zero' : '') + '">' +
+      '<span class="comp-label">' + id + ' ' + name + '</span>' +
+      '<span class="comp-value">' + ev + ' ev, ' + pts + ' pts' + effStr + '</span></div>';
+  }
+  return html + '</div>';
+}
+
+// =====================================================================
+// SECTION 8: TAB 1 — RANKINGS RENDERER
+// =====================================================================
+function renderRankings() {
+  var st = tabState.rankings;
+  var data = sortMulti(filterPlayers(), st.sorts);
+  playerCountEl.textContent = "Showing " + data.length + " of " + getPlayers().length + " players";
+  renderHeader("rankings");
+  document.getElementById("body-rankings").innerHTML = renderRows("rankings", data);
+}
+
+// =====================================================================
+// SECTION 9: TAB 2 — FOUL PROFILE RENDERER
+// =====================================================================
+function renderFoulProfile() {
+  var st = tabState.foulprofile;
+  var data = sortMulti(filterPlayers(), st.sorts);
+  playerCountEl.textContent = "Showing " + data.length + " of " + getPlayers().length + " players";
+  renderHeader("foulprofile");
+  document.getElementById("body-foulprofile").innerHTML = renderRows("foulprofile", data);
+}
+
+// =====================================================================
+// SECTION 10: TAB 3 — FT BY TYPE RENDERER
+// =====================================================================
+function renderFtType() {
+  var st = tabState.fttype;
+  var data = sortMulti(filterPlayers(), st.sorts);
+  playerCountEl.textContent = "Showing " + data.length + " of " + getPlayers().length + " players";
+  renderHeader("fttype");
+  document.getElementById("body-fttype").innerHTML = renderRows("fttype", data);
+}
+
+// =====================================================================
+// SECTION 11: TAB 4 — ALL GAME LOGS RENDERER
+// =====================================================================
+
+// Build effective column defs for distortion tab, respecting quarter filter.
+// When a quarter is selected: hide fullGameOnly columns, remap effCol keys.
+function getDistortionCols() {
+  var st = tabState.distortion;
+  var qf = st.quarterFilter || "all";
+  var defs = COL_DEFS.distortion;
+  var cs = colState.distortion;
+  return cs.order.map(function(i) { return defs[i]; }).filter(function(col) {
+    if (cs.hidden.has(col.key)) return false;
+    if (qf !== "all" && col.fullGameOnly) return false;
+    return true;
+  }).map(function(col) {
+    // For eff columns and the SP column, remap key to the quarter-specific field
+    if (qf !== "all" && col.effCol) {
+      var qKey = qf + "_" + col.effCol;
+      return Object.assign({}, col, { key: qKey });
+    }
+    if (qf !== "all" && col.spCol) {
+      return Object.assign({}, col, { key: qf + "_sp" });
+    }
+    return col;
+  });
+}
+
+// Override getVisibleCols for distortion to use our quarter-aware version
+var _origGetVisibleCols = getVisibleCols;
+getVisibleCols = function(tab) {
+  if (tab === "distortion") return getDistortionCols();
+  return _origGetVisibleCols(tab);
+};
+
+function renderDistortion() {
+  // Trigger async fetch if pergame data not yet loaded
+  if (currentSeason !== "ALL" && (SEASON_META[currentSeason] || {}).has_pbp &&
+      (!PERGAME[currentSeason] || PERGAME[currentSeason].length === 0)) {
+    ensurePergame(currentSeason, function() { renderDistortion(); });
+    return;
+  }
+  var st = tabState.distortion;
+  var filtered = filterPergame();
+  filtered.forEach(enrichPergameRow);
+  var all = sortMulti(filtered, st.sorts);
+  var limited = all.slice(0, st.limit);
+
+  // Build counter text
+  var countText = "Showing " + limited.length + " of " + all.length + " games";
+  if (st.deltaThreshold > 0) {
+    countText += " (|\u03B4| \u2265 " + st.deltaThreshold + "pp)";
+  }
+  playerCountEl.textContent = countText;
+
+  renderHeader("distortion");
+  document.getElementById("body-distortion").innerHTML = renderRows("distortion", limited);
+  document.getElementById("showMoreWrap").style.display = limited.length < all.length ? "block" : "none";
+}
+
+// =====================================================================
+// SECTION 12: RENDER DISPATCHER
+// =====================================================================
+var renderers = {
+  rankings: renderRankings,
+  foulprofile: renderFoulProfile,
+  fttype: renderFtType,
+  distortion: renderDistortion,
+};
+function render() {
+  if (renderers[activeTab]) renderers[activeTab]();
+  resetAllBtn.style.display = hasAnyFilter(activeTab) ? "" : "none";
+}
+
+resetAllBtn.addEventListener("click", function() {
+  colState[activeTab].filters = {};
+  searchEl.value = "";
+  tabState.rankings.expanded = null;
+  closeFilterPanel();
+  render();
+});
+
+// =====================================================================
+// SECTION 13: COLUMN MANAGER
+// =====================================================================
+function buildColManager() {
+  var menu = document.getElementById("colMgrMenu");
+  var defs = COL_DEFS[activeTab];
+  var st = colState[activeTab];
+  if (!defs) return;
+
+  var html = "";
+  st.order.forEach(function(idx) {
+    var col = defs[idx];
+    var hidden = st.hidden.has(col.key);
+    var locked = col.locked;
+    var cls = locked ? ' class="locked"' : '';
+    var draggable = locked ? '' : ' draggable="true"';
+    var grip = locked ? '<span class="cm-grip">&nbsp;&nbsp;</span>' : '<span class="cm-grip">&#x2630;</span>';
+    html += '<label' + cls + draggable + ' data-order-idx="' + idx + '">' +
+            grip +
+            '<input type="checkbox" data-key="' + col.key + '"' +
+            (locked || !hidden ? ' checked' : '') +
+            (locked ? ' disabled' : '') + '> ' + col.label + '</label>';
+  });
+  html += '<div class="col-mgr-reset"><button id="colResetBtn">Reset columns</button></div>';
+  menu.innerHTML = html;
+
+  // Checkbox toggle
+  menu.querySelectorAll('input[type="checkbox"]:not([disabled])').forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      if (cb.checked) st.hidden.delete(cb.dataset.key);
+      else st.hidden.add(cb.dataset.key);
+      render();
+    });
+  });
+
+  // Drag-and-drop reorder within the column manager
+  var cmDragFrom = null;
+  menu.querySelectorAll('label[draggable="true"]').forEach(function(lbl) {
+    lbl.addEventListener("dragstart", function(e) {
+      cmDragFrom = lbl;
+      lbl.classList.add("cm-dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", lbl.dataset.orderIdx);
+    });
+    lbl.addEventListener("dragend", function() {
+      lbl.classList.remove("cm-dragging");
+      menu.querySelectorAll("label").forEach(function(l) { l.classList.remove("cm-drag-over"); });
+    });
+    lbl.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      menu.querySelectorAll("label").forEach(function(l) { l.classList.remove("cm-drag-over"); });
+      if (lbl !== cmDragFrom) lbl.classList.add("cm-drag-over");
+    });
+    lbl.addEventListener("dragleave", function() {
+      lbl.classList.remove("cm-drag-over");
+    });
+    lbl.addEventListener("drop", function(e) {
+      e.preventDefault();
+      lbl.classList.remove("cm-drag-over");
+      if (!cmDragFrom || cmDragFrom === lbl) return;
+      var fromIdx = parseInt(cmDragFrom.dataset.orderIdx);
+      var toIdx = parseInt(lbl.dataset.orderIdx);
+      var fromPos = st.order.indexOf(fromIdx);
+      var toPos = st.order.indexOf(toIdx);
+      if (fromPos < 0 || toPos < 0) return;
+      st.order.splice(fromPos, 1);
+      var newToPos = st.order.indexOf(toIdx);
+      if (fromPos < toPos) newToPos++;
+      st.order.splice(newToPos, 0, fromIdx);
+      cmDragFrom = null;
+      buildColManager();
+      render();
+    });
+  });
+
+  var resetBtn = document.getElementById("colResetBtn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function() {
+      st.order = defs.map(function(_, i) { return i; });
+      st.hidden.clear();
+      buildColManager();
+      render();
+    });
+  }
+}
+
+// Column manager toggle
+document.getElementById("colMgrBtn").addEventListener("click", function(e) {
+  e.stopPropagation();
+  document.getElementById("colMgrMenu").classList.toggle("open");
+});
+document.addEventListener("click", function() {
+  document.getElementById("colMgrMenu").classList.remove("open");
+});
+document.getElementById("colMgrMenu").addEventListener("click", function(e) { e.stopPropagation(); });
+
+// =====================================================================
+// SECTION 14: DRAG-AND-DROP COLUMN REORDERING
+// =====================================================================
+var dragState = { tab: null, fromIdx: null };
+
+function attachDragHandlers(tab) {
+  var hdr = document.getElementById("hdr-" + tab);
+  var ths = hdr.querySelectorAll("th");
+  ths.forEach(function(th, visualIdx) {
+    th.addEventListener("dragstart", function(e) {
+      dragState.tab = tab;
+      dragState.fromIdx = visualIdx;
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", visualIdx.toString());
+      th.style.opacity = "0.4";
+    });
+    th.addEventListener("dragend", function() {
+      th.style.opacity = "1";
+      hdr.querySelectorAll("th").forEach(function(h) { h.classList.remove("drag-over"); });
+    });
+    th.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      hdr.querySelectorAll("th").forEach(function(h) { h.classList.remove("drag-over"); });
+      th.classList.add("drag-over");
+    });
+    th.addEventListener("dragleave", function() {
+      th.classList.remove("drag-over");
+    });
+    th.addEventListener("drop", function(e) {
+      e.preventDefault();
+      th.classList.remove("drag-over");
+      if (dragState.tab !== tab) return;
+      var fromVisual = dragState.fromIdx;
+      var toVisual = visualIdx;
+      if (fromVisual === toVisual) return;
+
+      // Map visual indices to order array indices
+      var st = colState[tab];
+      var defs = COL_DEFS[tab];
+      var visible = [];
+      st.order.forEach(function(oi) {
+        if (!st.hidden.has(defs[oi].key)) visible.push(oi);
+      });
+      var fromOrder = visible[fromVisual];
+      var toOrder = visible[toVisual];
+
+      // Remove fromOrder from st.order and insert at toOrder's position
+      var fromPos = st.order.indexOf(fromOrder);
+      st.order.splice(fromPos, 1);
+      var toPos = st.order.indexOf(toOrder);
+      if (fromVisual < toVisual) toPos++;
+      st.order.splice(toPos, 0, fromOrder);
+
+      buildColManager();
+      render();
+    });
+  });
+}
+
+// =====================================================================
+// SECTION 15: COLUMN FILTER DROPDOWNS
+// =====================================================================
+var openFilterTab = null;
+var openFilterKey = null;
+
+function getDataForTab(tab) {
+  if (tab === "distortion") return getPergame();
+  return getPlayers();
+}
+
+function isNumericCol(col) {
+  return col.fmt === "int" || col.fmt === "dec1" || col.fmt === "pct" || col.fmt === "delta";
+}
+
+function getUniqueValues(tab, key) {
+  var data = getDataForTab(tab);
+  var seen = {};
+  var vals = [];
+  data.forEach(function(row) {
+    var v = row[key];
+    var sv = (v != null ? String(v) : "");
+    if (!seen[sv]) { seen[sv] = true; vals.push(sv); }
+  });
+  vals.sort(function(a, b) { return a.localeCompare(b); });
+  return vals;
+}
+
+function openFilterPanel(tab, colKey, anchorEl) {
+  closeFilterPanel();
+  openFilterTab = tab;
+  openFilterKey = colKey;
+
+  var colDef = COL_DEFS[tab].find(function(c) { return c.key === colKey; });
+  if (!colDef) return;
+
+  var st = tabState[tab];
+  var filters = colState[tab].filters;
+  var numeric = isNumericCol(colDef);
+  var uniqueVals = getUniqueValues(tab, colKey);
+  var useRange = numeric && uniqueVals.length > 40;
+
+  var html = '';
+
+  // Sort section
+  html += '<div class="fp-sort">';
+  var sorts = st.sorts || [];
+  var isPrimary = sorts.length > 0 && sorts[0].key === colKey;
+  var isSecondary = sorts.length > 1 && sorts[1].key === colKey;
+  var ascActive = (isPrimary && sorts[0].dir === 1) || (isSecondary && sorts[1].dir === 1) ? ' active-sort' : '';
+  var descActive = (isPrimary && sorts[0].dir === -1) || (isSecondary && sorts[1].dir === -1) ? ' active-sort' : '';
+  if (colDef.sortable !== false) {
+    html += '<button class="fp-sort-asc' + ascActive + '" data-dir="1">\u25B2 Sort Ascending</button>';
+    html += '<button class="fp-sort-desc' + descActive + '" data-dir="-1">\u25BC Sort Descending</button>';
+    if (sorts.length > 0 && sorts[0].key !== colKey) {
+      html += '<div style="font-size:10px;color:#8b949e;padding:2px 8px;">Hold Shift + click to add as 2nd sort</div>';
+    }
+  }
+  html += '</div>';
+
+  // Filter section
+  html += '<div class="fp-filter">';
+
+  if (useRange) {
+    // Numeric range filter
+    var existing = filters[colKey];
+    var minVal = existing && existing.type === "num" && existing.min != null ? existing.min : "";
+    var maxVal = existing && existing.type === "num" && existing.max != null ? existing.max : "";
+    html += '<div class="fp-range">';
+    html += '<span>Min</span><input type="number" id="fpMin" step="any" value="' + minVal + '" placeholder="min">';
+    html += '<span>Max</span><input type="number" id="fpMax" step="any" value="' + maxVal + '" placeholder="max">';
+    html += '</div>';
+  } else {
+    // Checkbox filter
+    html += '<input type="text" class="fp-search" id="fpSearch" placeholder="Search...">';
+    html += '<div class="fp-checks" id="fpChecks">';
+
+    // Determine which values are currently checked
+    var checkedSet = null;
+    if (filters[colKey] && filters[colKey].type === "text") {
+      checkedSet = filters[colKey].checked;
+    }
+    var allChecked = (checkedSet === null);
+
+    html += '<label class="select-all"><input type="checkbox" id="fpSelectAll"' +
+            (allChecked ? ' checked' : '') + '> (Select All)</label>';
+
+    uniqueVals.forEach(function(v) {
+      var displayVal = v || "(blank)";
+      var isChecked = allChecked || (checkedSet && checkedSet.has(v));
+      html += '<label data-val="' + v.replace(/"/g, '&quot;') + '"><input type="checkbox" value="' +
+              v.replace(/"/g, '&quot;') + '"' + (isChecked ? ' checked' : '') + '> ' +
+              displayVal + '</label>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Footer
+  html += '<div class="fp-footer">';
+  html += '<button class="fp-clear">Clear</button>';
+  html += '<button class="fp-apply">Apply</button>';
+  html += '</div>';
+
+  filterPanel.innerHTML = html;
+  filterPanel.style.display = "block";
+
+  // Position below the anchor element
+  var rect = anchorEl.getBoundingClientRect();
+  var panelTop = rect.bottom + 4;
+  var panelLeft = rect.left;
+  // Keep on screen
+  if (panelLeft + 260 > window.innerWidth) panelLeft = window.innerWidth - 264;
+  if (panelLeft < 4) panelLeft = 4;
+  if (panelTop + 400 > window.innerHeight) panelTop = rect.top - 400;
+  filterPanel.style.top = panelTop + "px";
+  filterPanel.style.left = panelLeft + "px";
+
+  // Wire up sort buttons (shift+click adds secondary sort)
+  filterPanel.querySelectorAll(".fp-sort button").forEach(function(btn) {
+    btn.addEventListener("click", function(e) {
+      var dir = parseInt(btn.dataset.dir);
+      if (e.shiftKey && st.sorts.length > 0 && st.sorts[0].key !== colKey) {
+        // Add or replace secondary sort
+        st.sorts = [st.sorts[0], {key: colKey, dir: dir}];
+      } else {
+        // Primary sort (replaces everything)
+        st.sorts = [{key: colKey, dir: dir}];
+      }
+      st.sortKey = st.sorts[0].key;
+      st.sortDir = st.sorts[0].dir;
+      closeFilterPanel();
+      render();
+    });
+  });
+
+  // Wire up search (checkbox mode)
+  var searchInput = document.getElementById("fpSearch");
+  if (searchInput) {
+    searchInput.addEventListener("input", function() {
+      var q = searchInput.value.toLowerCase();
+      var checksEl = document.getElementById("fpChecks");
+      checksEl.querySelectorAll("label:not(.select-all)").forEach(function(lbl) {
+        var val = lbl.dataset.val || "";
+        lbl.style.display = val.toLowerCase().includes(q) ? "" : "none";
+      });
+    });
+    searchInput.focus();
+  }
+
+  // Wire up Select All
+  var selectAllCb = document.getElementById("fpSelectAll");
+  if (selectAllCb) {
+    selectAllCb.addEventListener("change", function() {
+      var checked = selectAllCb.checked;
+      document.getElementById("fpChecks").querySelectorAll('label:not(.select-all) input').forEach(function(cb) {
+        if (cb.closest("label").style.display !== "none") cb.checked = checked;
+      });
+    });
+  }
+
+  // Wire up Apply
+  filterPanel.querySelector(".fp-apply").addEventListener("click", function() {
+    if (useRange) {
+      var minInput = document.getElementById("fpMin");
+      var maxInput = document.getElementById("fpMax");
+      var minV = minInput.value !== "" ? parseFloat(minInput.value) : null;
+      var maxV = maxInput.value !== "" ? parseFloat(maxInput.value) : null;
+      if (minV === null && maxV === null) {
+        delete filters[colKey];
+      } else {
+        filters[colKey] = { type: "num", min: minV, max: maxV };
+      }
+    } else {
+      var allCbs = filterPanel.querySelectorAll('.fp-checks label:not(.select-all) input');
+      var checked = new Set();
+      var total = 0;
+      allCbs.forEach(function(cb) { total++; if (cb.checked) checked.add(cb.value); });
+      if (checked.size === total) {
+        delete filters[colKey];  // all checked = no filter
+      } else {
+        filters[colKey] = { type: "text", checked: checked };
+      }
+    }
+    closeFilterPanel();
+    tabState.rankings.expanded = null;
+    render();
+    redrawOpenCharts();
+  });
+
+  // Wire up Clear — removes this column's filter AND resets sort to default
+  filterPanel.querySelector(".fp-clear").addEventListener("click", function() {
+    if (colState[tab]) delete colState[tab].filters[colKey];
+    // Reset sort to default (PS% desc)
+    var defaultSort = {key: "pure_ts_pct", dir: -1};
+    if (tab === "distortion") defaultSort = {key: "_absDelta", dir: -1};
+    else if (tab === "foulprofile" || tab === "fttype") defaultSort = {key: "total_scoring_poss", dir: -1};
+    st.sorts = [defaultSort];
+    st.sortKey = defaultSort.key;
+    st.sortDir = defaultSort.dir;
+    closeFilterPanel();
+    if (tabState.rankings) tabState.rankings.expanded = null;
+    buildColManager();
+    render();
+    redrawOpenCharts();
+  });
+
+  // Stop clicks inside panel from closing it
+  filterPanel.addEventListener("click", function(e) { e.stopPropagation(); });
+}
+
+function closeFilterPanel() {
+  filterPanel.style.display = "none";
+  filterPanel.innerHTML = "";
+  openFilterTab = null;
+  openFilterKey = null;
+}
+
+// Close filter panel on outside click
+document.addEventListener("click", function(e) {
+  if (filterPanel.style.display !== "none" && !filterPanel.contains(e.target)) {
+    closeFilterPanel();
+  }
+});
+
+// Delegate filter arrow clicks on all header rows
+["rankings","foulprofile","fttype","distortion"].forEach(function(tab) {
+  document.getElementById("hdr-" + tab).addEventListener("click", function(e) {
+    var arrow = e.target.closest(".filter-arrow");
+    if (arrow) {
+      e.stopPropagation();
+      var colKey = arrow.dataset.fcol;
+      if (openFilterTab === tab && openFilterKey === colKey) {
+        closeFilterPanel();
+      } else {
+        openFilterPanel(tab, colKey, arrow);
+      }
+      return;
+    }
+  });
+});
+
+// =====================================================================
+// SECTION 16: DOWNLOAD (CSV / XLSX)
+// =====================================================================
+(function() {
+  var dlBtn = document.getElementById("downloadBtn");
+  var dlMenu = document.getElementById("dlMenu");
+
+  dlBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    dlMenu.classList.toggle("open");
+  });
+
+  document.addEventListener("click", function() {
+    dlMenu.classList.remove("open");
+  });
+
+  function getExportData() {
+    var cols = getVisibleCols(activeTab).filter(function(c) {
+      return c.fmt !== "bar" && c.fmt !== "rank";
+    });
+    var data;
+    if (activeTab === "distortion") {
+      var st = tabState.distortion;
+      var dlFiltered = filterPergame(); dlFiltered.forEach(enrichPergameRow);
+      data = sortMulti(dlFiltered, st.sorts).slice(0, st.limit);
+      cols = getDistortionCols().filter(function(c) {
+        return c.fmt !== "bar" && c.fmt !== "rank";
+      });
+    } else {
+      var st2 = tabState[activeTab];
+      data = sortMulti(filterPlayers(), st2.sorts);
+    }
+    return { cols: cols, data: data };
+  }
+
+  function downloadFile(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function exportCsv() {
+    var exp = getExportData();
+    var header = exp.cols.map(function(c) { return '"' + c.label + '"'; }).join(",");
+    var rows = exp.data.map(function(row) {
+      return exp.cols.map(function(c) {
+        var v = row[c.key];
+        if (v == null) return "";
+        if (typeof v === "string") return '"' + v.replace(/"/g, '""') + '"';
+        return v;
+      }).join(",");
+    });
+    var csv = header + "\n" + rows.join("\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    downloadFile(blob, "ps_" + activeTab + "_" + currentSeason + ".csv");
+  }
+
+  function exportXlsx() {
+    var exp = getExportData();
+    var aoa = [exp.cols.map(function(c) { return c.label; })];
+    exp.data.forEach(function(row) {
+      aoa.push(exp.cols.map(function(c) {
+        var v = row[c.key];
+        return v == null ? "" : v;
+      }));
+    });
+    var ws = XLSX.utils.aoa_to_sheet(aoa);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, activeTab);
+    var wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    var blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    downloadFile(blob, "ps_" + activeTab + "_" + currentSeason + ".xlsx");
+  }
+
+  dlMenu.addEventListener("click", function(e) {
+    var item = e.target.closest("[data-fmt]");
+    if (!item) return;
+    dlMenu.classList.remove("open");
+    if (item.dataset.fmt === "csv") exportCsv();
+    else if (item.dataset.fmt === "xlsx") exportXlsx();
+  });
+})();
+
+// =====================================================================
+// SECTION 17: TAB SWITCHING
+// =====================================================================
+document.getElementById("tabBar").addEventListener("click", function(e) {
+  var btn = e.target.closest("button");
+  if (!btn || !btn.dataset.tab) return;
+  activeTab = btn.dataset.tab;
+  document.querySelectorAll(".tab-bar button").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  document.querySelectorAll(".tab-content").forEach(function(d) { d.classList.remove("active"); });
+  document.getElementById("tab-" + activeTab).classList.add("active");
+
+  // Show/hide controls (keep visible for charts since scatter/histogram use filters)
+  document.getElementById("controls").style.display = activeTab === "about" ? "none" : "";
+
+  // Draw charts when Charts tab is shown
+  if (activeTab === "charts") {
+    setTimeout(drawActiveChart, 50);
+  }
+
+  // Adjust min-poss slider for distortion vs season tabs
+  var hasComp = currentSeason !== "ALL" && (SEASON_META[currentSeason] || {}).has_components !== false;
+  var isPlayoffs = currentSeason !== "ALL" && (SEASON_META[currentSeason] || {}).is_playoffs;
+  var seasonDefault = isPlayoffs ? 100 : 500;
+  if (activeTab === "distortion") {
+    minPossLabel.textContent = "Min game possessions:";
+    minPossEl.max = 50; minPossEl.value = 10; minPossValEl.textContent = "10";
+  } else {
+    minPossLabel.textContent = hasComp ? "Min season possessions:" : "Min season FGA:";
+    minPossEl.max = 2000; minPossEl.value = seasonDefault; minPossValEl.textContent = String(seasonDefault);
+  }
+
+  buildColManager();
+  render();
+});
+
+// About sub-tab switching
+document.getElementById("aboutSubtabBar").addEventListener("click", function(e) {
+  var btn = e.target.closest("button");
+  if (!btn || !btn.dataset.subtab) return;
+  document.querySelectorAll(".about-subtab-bar button").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  document.querySelectorAll(".about-subtab-pane").forEach(function(d) { d.classList.remove("active"); });
+  document.getElementById("subtab-" + btn.dataset.subtab).classList.add("active");
+});
+
+// =====================================================================
+// SECTION 18: SEASON SELECTOR
+// =====================================================================
+function updateSeasonHeader() {
+  if (currentSeason === "ALL") {
+    pageTitleEl.textContent = "Pure Shooting % \u2014 All Seasons (1979-80 to 2025-26)";
+    document.title = "PS% League Viewer \u2014 All Seasons";
+    subtitleDelta.textContent = "47 seasons \u2014 showing all player-seasons matching current filters";
+    return;
+  }
+  var meta = SEASON_META[currentSeason] || {};
+  pageTitleEl.textContent = "Pure Shooting % \u2014 " + currentSeason + " Season";
+  document.title = "PS% League Viewer \u2014 " + currentSeason;
+  if (meta.avg_delta != null) {
+    var d = meta.avg_delta;
+    var absD = Math.abs(d).toFixed(1);
+    subtitleDelta.textContent = "League average: True Shooting % (TS%) overrates efficiency by " + absD + "pp";
+  } else {
+    subtitleDelta.textContent = "";
+  }
+}
+
+function initSeasonSelector() {
+  // Add "All Seasons" option first
+  var allOpt = document.createElement("option");
+  allOpt.value = "ALL";
+  allOpt.textContent = "All Seasons";
+  seasonSelectEl.appendChild(allOpt);
+
+  SEASONS.forEach(function(s) {
+    var opt = document.createElement("option");
+    opt.value = s;
+    if (s.endsWith("-PO")) {
+      opt.textContent = s.replace("-PO", "") + " Playoffs";
+      opt.style.paddingLeft = "20px";
+      opt.style.color = "#8b949e";
+    } else {
+      opt.textContent = s + " Season";
+    }
+    seasonSelectEl.appendChild(opt);
+  });
+  seasonSelectEl.value = currentSeason;
+}
+
+var COMPONENT_TABS = ["foulprofile", "fttype"];
+var GAMELOG_TABS = ["distortion"];
+
+function updateTabAvailability() {
+  var meta = SEASON_META[currentSeason] || {};
+  var hasComponents = currentSeason !== "ALL" && meta.has_components !== false;
+  var hasGameLogs = currentSeason !== "ALL" && meta.has_pbp !== false;
+  document.querySelectorAll(".tab-bar button[data-tab]").forEach(function(btn) {
+    var tab = btn.dataset.tab;
+    var enabled = true;
+    if (COMPONENT_TABS.indexOf(tab) >= 0) enabled = hasComponents;
+    else if (GAMELOG_TABS.indexOf(tab) >= 0) enabled = hasGameLogs;
+    else return;
+
+    if (enabled) {
+      btn.classList.remove("disabled");
+    } else {
+      btn.classList.add("disabled");
+      if (activeTab === tab) {
+        btn.classList.remove("active");
+        document.querySelector('.tab-bar button[data-tab="rankings"]').classList.add("active");
+        activeTab = "rankings";
+        document.querySelectorAll(".tab-content").forEach(function(tc) { tc.classList.remove("active"); });
+        document.getElementById("tab-rankings").classList.add("active");
+      }
+    }
+  });
+}
+
+seasonSelectEl.addEventListener("change", function() {
+  currentSeason = seasonSelectEl.value;
+
+  // Clear all column filters — values may not exist in the new season
+  for (var tab in colState) {
+    colState[tab].filters = {};
+  }
+
+  // Reset expanded row
+  tabState.rankings.expanded = null;
+
+  // Reset distortion state
+  tabState.distortion.limit = 500;
+  tabState.distortion.deltaThreshold = 0;
+  tabState.distortion.quarterFilter = "all";
+  document.getElementById("deltaSlider").value = 0;
+  document.getElementById("deltaSliderVal").textContent = "0";
+  document.getElementById("quarterSelect").value = "all";
+
+  // Close any open filter panel
+  closeFilterPanel();
+
+  // Show/hide Season column based on All Seasons vs single season
+  if (colState.rankings) {
+    if (currentSeason === "ALL") {
+      colState.rankings.hidden.delete("_season");
+    } else {
+      colState.rankings.hidden.add("_season");
+    }
+  }
+  _allPlayersCache = null; // invalidate cache on season change
+
+  // Update slider label and min for season type
+  var hasComponentsSeason = currentSeason !== "ALL" && (SEASON_META[currentSeason] || {}).has_components !== false;
+  var isPlayoffsSeason = currentSeason !== "ALL" && (SEASON_META[currentSeason] || {}).is_playoffs;
+  var defVal = isPlayoffsSeason ? 100 : 500;
+  if (activeTab !== "distortion") {
+    minPossLabel.textContent = hasComponentsSeason ? "Min season possessions:" : "Min season FGA:";
+    minPossEl.min = currentSeason === "ALL" ? 500 : 0;
+    minPossEl.max = 2000; minPossEl.value = defVal; minPossValEl.textContent = String(defVal);
+  }
+
+  updateTabAvailability();
+  updateSeasonHeader();
+  buildColManager();
+  render();
+  if (activeTab === "charts") { chartInited = {}; drawActiveChart(); }
+});
+
+// =====================================================================
+// SECTION 19: ROW EXPAND (Rankings tab)
+// =====================================================================
+document.getElementById("body-rankings").addEventListener("click", function(e) {
+  var row = e.target.closest("tr.clickable");
+  if (!row) return;
+  var pid = parseInt(row.dataset.pid);
+  var st = tabState.rankings;
+  st.expanded = (st.expanded === pid) ? null : pid;
+  renderRankings();
+});
+
+// =====================================================================
+// SECTION 20: SHOW MORE (All Game Logs tab)
+// =====================================================================
+document.getElementById("showMoreBtn").addEventListener("click", function() {
+  tabState.distortion.limit += 500;
+  renderDistortion();
+});
+
+// =====================================================================
+// SECTION 20b: DELTA SLIDER (All Game Logs tab)
+// =====================================================================
+document.getElementById("deltaSlider").addEventListener("input", function() {
+  var val = parseInt(this.value) || 0;
+  document.getElementById("deltaSliderVal").textContent = val;
+  tabState.distortion.deltaThreshold = val;
+  tabState.distortion.limit = 500;
+  renderDistortion();
+});
+
+// =====================================================================
+// SECTION 20c: QUARTER FILTER (All Game Logs tab)
+// =====================================================================
+document.getElementById("quarterSelect").addEventListener("change", function() {
+  tabState.distortion.quarterFilter = this.value;
+  tabState.distortion.limit = 500;
+  // Reset sort and column filters since keys change between full-game and quarter views
+  tabState.distortion.sortKey = "_absDelta";
+  tabState.distortion.sortDir = -1;
+  tabState.distortion.sorts = [{key: "_absDelta", dir: -1}];
+  colState.distortion.filters = {};
+  closeFilterPanel();
+  renderDistortion();
+});
+
+// =====================================================================
+// SECTION 21: CONTROLS — SEARCH & MIN POSS
+// =====================================================================
+var _chartDebounce = null;
+function redrawOpenCharts() {
+  if (activeTab !== "charts") return;
+  clearTimeout(_chartDebounce);
+  _chartDebounce = setTimeout(drawActiveChart, 80);
+}
+searchEl.addEventListener("input", function() {
+  tabState.rankings.expanded = null;
+  render();
+  redrawOpenCharts();
+});
+minPossEl.addEventListener("input", function() {
+  minPossValEl.textContent = minPossEl.value;
+  tabState.rankings.expanded = null;
+  render();
+  redrawOpenCharts();
+});
+
+// =====================================================================
+// SECTION 22: FLOATING TOOLTIP
+// =====================================================================
+var ttEl = document.getElementById("tooltipFloat");
+document.addEventListener("mouseover", function(e) {
+  var target = e.target.closest("[data-tooltip]");
+  if (!target) { ttEl.style.display = "none"; return; }
+  var text = target.getAttribute("data-tooltip");
+  if (!text) { ttEl.style.display = "none"; return; }
+  ttEl.textContent = text;
+  ttEl.style.display = "block";
+  var rect = target.getBoundingClientRect();
+  var ttRect = ttEl.getBoundingClientRect();
+  var top = rect.top - ttRect.height - 6;
+  if (top < 4) top = rect.bottom + 6;
+  var left = rect.left + rect.width / 2 - ttRect.width / 2;
+  left = Math.max(4, Math.min(left, window.innerWidth - ttRect.width - 4));
+  ttEl.style.top = top + "px";
+  ttEl.style.left = left + "px";
+});
+document.addEventListener("mouseout", function(e) {
+  var target = e.target.closest("[data-tooltip]");
+  if (target) ttEl.style.display = "none";
+});
+
+// =====================================================================
+// SECTION 23a: HISTOGRAM
+// =====================================================================
+var histoWrap = document.getElementById("histoWrap");
+var histoCanvas = document.getElementById("histoCanvas");
+var histoCtx = histoCanvas.getContext("2d");
+var histoTooltip = document.getElementById("histoTooltip");
+var histoColSel = document.getElementById("histoCol");
+var histoBins = []; // [{x0, x1, count, px, py, pw, ph}]
+
+function getHistoCols() {
+  return COL_DEFS.rankings.filter(function(c) {
+    return (c.fmt === "pct" || c.fmt === "int" || c.fmt === "dec1" || c.fmt === "delta") &&
+           c.key !== "_rank" && !c.locked;
+  });
+}
+
+function initHistoSelectors() {
+  var cols = getHistoCols();
+  var html = "";
+  cols.forEach(function(c) {
+    var sel = c.key === "pure_ts_pct" ? " selected" : "";
+    html += '<option value="' + c.key + '"' + sel + '>' + c.label + '</option>';
+  });
+  histoColSel.innerHTML = html;
+}
+
+function drawHistogram() {
+  var players = filterPlayers();
+  var key = histoColSel.value;
+  var label = histoColSel.options[histoColSel.selectedIndex].text;
+
+  setupHiDPI(histoCanvas, histoCtx, 900, 400);
+  var w = 900;
+  var h = 400;
+  var pad = {top: 20, right: 30, bottom: 45, left: 55};
+  var pw = w - pad.left - pad.right;
+  var ph = h - pad.top - pad.bottom;
+
+  // Collect valid values
+  var vals = [];
+  players.forEach(function(p) {
+    var v = p[key];
+    if (v != null && isFinite(v)) vals.push(v);
+  });
+
+  histoCtx.clearRect(0, 0, w, h);
+  histoBins = [];
+
+  if (vals.length === 0) {
+    histoCtx.fillStyle = "#8b949e";
+    histoCtx.font = "14px Helvetica";
+    histoCtx.textAlign = "center";
+    histoCtx.fillText("No data for selected column", w / 2, h / 2);
+    return;
+  }
+
+  // Compute bins
+  var vMin = Math.min.apply(null, vals);
+  var vMax = Math.max.apply(null, vals);
+  var range = vMax - vMin;
+  if (range === 0) range = 1;
+  var numBins = Math.min(25, Math.max(10, Math.round(Math.sqrt(vals.length))));
+  var binWidth = range / numBins;
+
+  var bins = [];
+  for (var i = 0; i < numBins; i++) {
+    bins.push({x0: vMin + i * binWidth, x1: vMin + (i + 1) * binWidth, count: 0});
+  }
+  vals.forEach(function(v) {
+    var idx = Math.floor((v - vMin) / binWidth);
+    if (idx >= numBins) idx = numBins - 1;
+    if (idx < 0) idx = 0;
+    bins[idx].count++;
+  });
+
+  var maxCount = Math.max.apply(null, bins.map(function(b) { return b.count; }));
+  if (maxCount === 0) maxCount = 1;
+
+  // Compute mean and median
+  var sum = 0;
+  vals.forEach(function(v) { sum += v; });
+  var mean = sum / vals.length;
+  var sorted = vals.slice().sort(function(a, b) { return a - b; });
+  var median = sorted.length % 2 === 0
+    ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
+    : sorted[Math.floor(sorted.length / 2)];
+
+  function xPos(v) { return pad.left + (v - vMin) / range * pw; }
+  function yPos(c) { return pad.top + ph - (c / maxCount) * ph; }
+
+  // Grid lines
+  histoCtx.strokeStyle = "#21262d";
+  histoCtx.lineWidth = 1;
+  var yTicks = 5;
+  for (var j = 0; j <= yTicks; j++) {
+    var yy = pad.top + ph - (j / yTicks) * ph;
+    histoCtx.beginPath(); histoCtx.moveTo(pad.left, yy); histoCtx.lineTo(pad.left + pw, yy); histoCtx.stroke();
+  }
+
+  // Draw bars
+  bins.forEach(function(bin) {
+    var bx = xPos(bin.x0) + 1;
+    var bw = xPos(bin.x1) - xPos(bin.x0) - 2;
+    var by = yPos(bin.count);
+    var bh = (pad.top + ph) - by;
+    if (bw < 1) bw = 1;
+    histoCtx.fillStyle = "rgba(88, 166, 255, 0.7)";
+    histoCtx.fillRect(bx, by, bw, bh);
+    bin.px = bx; bin.py = by; bin.pw = bw; bin.ph = bh;
+  });
+  histoBins = bins;
+
+  // Mean line
+  var meanX = xPos(mean);
+  histoCtx.strokeStyle = "#f0883e";
+  histoCtx.lineWidth = 2;
+  histoCtx.setLineDash([6, 3]);
+  histoCtx.beginPath(); histoCtx.moveTo(meanX, pad.top); histoCtx.lineTo(meanX, pad.top + ph); histoCtx.stroke();
+  histoCtx.setLineDash([]);
+  histoCtx.fillStyle = "#f0883e";
+  histoCtx.font = "11px Helvetica";
+  histoCtx.textAlign = "center";
+  histoCtx.fillText("Mean: " + (Math.round(mean * 10) / 10), meanX, pad.top - 5);
+
+  // Median line
+  var medX = xPos(median);
+  histoCtx.strokeStyle = "#3fb950";
+  histoCtx.lineWidth = 2;
+  histoCtx.setLineDash([6, 3]);
+  histoCtx.beginPath(); histoCtx.moveTo(medX, pad.top); histoCtx.lineTo(medX, pad.top + ph); histoCtx.stroke();
+  histoCtx.setLineDash([]);
+  histoCtx.fillStyle = "#3fb950";
+  histoCtx.font = "11px Helvetica";
+  // Offset median label if too close to mean
+  var medLabelY = Math.abs(meanX - medX) < 60 ? pad.top + 12 : pad.top - 5;
+  histoCtx.fillText("Median: " + (Math.round(median * 10) / 10), medX, medLabelY);
+
+  // X-axis labels
+  histoCtx.fillStyle = "#c9d1d9";
+  histoCtx.font = "bold 11px Helvetica";
+  histoCtx.textAlign = "center";
+  var labelStep = Math.max(1, Math.floor(numBins / 8));
+  for (var i = 0; i <= numBins; i += labelStep) {
+    var v = vMin + i * binWidth;
+    histoCtx.fillText(Math.round(v * 10) / 10, xPos(v), h - pad.bottom + 18);
+  }
+
+  // Y-axis labels
+  histoCtx.textAlign = "right";
+  for (var j = 0; j <= yTicks; j++) {
+    var c = Math.round(maxCount * j / yTicks);
+    histoCtx.fillText(c, pad.left - 8, pad.top + ph - (j / yTicks) * ph + 4);
+  }
+
+  // Axis titles
+  histoCtx.fillStyle = "#c9d1d9";
+  histoCtx.font = "13px Helvetica";
+  histoCtx.textAlign = "center";
+  histoCtx.fillText(label, pad.left + pw / 2, h - 4);
+  histoCtx.save();
+  histoCtx.translate(14, pad.top + ph / 2);
+  histoCtx.rotate(-Math.PI / 2);
+  histoCtx.fillText("Players", 0, 0);
+  histoCtx.restore();
+
+  // Border
+  histoCtx.strokeStyle = "#30363d";
+  histoCtx.lineWidth = 1;
+  histoCtx.strokeRect(pad.left, pad.top, pw, ph);
+
+  // Player count label
+  histoCtx.fillStyle = "#8b949e";
+  histoCtx.font = "11px Helvetica";
+  histoCtx.textAlign = "right";
+  histoCtx.fillText(vals.length + " players", w - pad.right, pad.top - 5);
+}
+
+// Hover tooltip
+histoCanvas.addEventListener("mousemove", function(e) {
+  var rect = histoCanvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+  var hit = null;
+  histoBins.forEach(function(bin) {
+    if (mx >= bin.px && mx <= bin.px + bin.pw && my >= bin.py && my <= bin.py + bin.ph) {
+      hit = bin;
+    }
+  });
+  if (hit) {
+    histoTooltip.innerHTML = (Math.round(hit.x0 * 10) / 10) + ' – ' + (Math.round(hit.x1 * 10) / 10) +
+      '<br><b>' + hit.count + ' players</b>';
+    histoTooltip.style.display = "block";
+    histoTooltip.style.left = (hit.px + hit.pw / 2) + "px";
+    histoTooltip.style.top = (hit.py - 40) + "px";
+    // Highlight bar
+    drawHistogram();
+    histoCtx.fillStyle = "rgba(88, 166, 255, 1.0)";
+    histoCtx.fillRect(hit.px, hit.py, hit.pw, hit.ph);
+  } else {
+    histoTooltip.style.display = "none";
+  }
+});
+
+histoCanvas.addEventListener("mouseleave", function() {
+  histoTooltip.style.display = "none";
+});
+
+// (histogram toggle removed — now in Charts tab)
+
+// Redraw on column change
+histoColSel.addEventListener("change", drawHistogram);
+
+// =====================================================================
+// SECTION 23b: STACKED BAR CHART (SCORING COMPOSITION)
+// =====================================================================
+var stackedWrap = document.getElementById("stackedWrap");
+var stackedCanvas = document.getElementById("stackedCanvas");
+var stackedCtx = stackedCanvas.getContext("2d");
+var stackedTooltip = document.getElementById("stackedTooltip");
+var stackedSearchEl = document.getElementById("stackedSearch");
+var stackedSuggest = document.getElementById("stackedSuggest");
+var stackedPills = document.getElementById("stackedPills");
+var stackedSelected = []; // player objects
+var stackedSegments = []; // [{px, py, pw, ph, player, comp, count, pct}]
+
+var COMP_COLORS = [
+  {key: "C1a", label: "Clean 2PT", color: "#58a6ff"},
+  {key: "C1b", label: "Clean 3PT", color: "#3fb950"},
+  {key: "C2",  label: "2PT SF",    color: "#f0883e"},
+  {key: "C3",  label: "3PT SF",    color: "#d2a826"},
+  {key: "C45", label: "And-1s",    color: "#bc8cff"},
+  {key: "C6",  label: "Penalty FTs",color: "#8b949e"},
+];
+
+function getCompValue(p, compKey) {
+  if (compKey === "C45") return (p.fp_and1_n || 0);
+  if (compKey === "C6") return (p.fp_penalty_n || 0);
+  return (p[compKey + "_events"] || 0);
+}
+
+function drawStacked() {
+  setupHiDPI(stackedCanvas, stackedCtx, 900, 350);
+  var w = 900;
+  var h = 350;
+  var pad = {top: 15, right: 20, bottom: 15, left: 220};
+  var pw = w - pad.left - pad.right;
+  var ph = h - pad.top - pad.bottom;
+
+  stackedCtx.clearRect(0, 0, w, h);
+  stackedSegments = [];
+
+  // Check if current season has component data
+  var meta = currentSeason !== "ALL" ? (SEASON_META[currentSeason] || {}) : {};
+  if (currentSeason !== "ALL" && meta.has_components === false) {
+    stackedCtx.fillStyle = "#8b949e";
+    stackedCtx.font = "14px Helvetica";
+    stackedCtx.textAlign = "center";
+    stackedCtx.fillText("Scoring composition requires component data.", w / 2, h / 2 - 10);
+    stackedCtx.font = "12px Helvetica";
+    stackedCtx.fillText("Available for seasons 1996-97 onward.", w / 2, h / 2 + 14);
+    return;
+  }
+
+  var players = stackedSelected;
+  if (players.length === 0) {
+    stackedCtx.fillStyle = "#8b949e";
+    stackedCtx.font = "14px Helvetica";
+    stackedCtx.textAlign = "center";
+    stackedCtx.fillText("Add players above to compare scoring composition", w / 2, h / 2);
+    return;
+  }
+
+  var barH = Math.min(40, Math.floor(ph / players.length) - 8);
+  var gap = 6;
+  var totalH = players.length * (barH + gap) - gap;
+  var startY = pad.top + (ph - totalH) / 2;
+
+  players.forEach(function(p, i) {
+    var y = startY + i * (barH + gap);
+    var sp = p.total_scoring_poss || 0;
+    if (sp === 0) return;
+
+    // Player name label
+    stackedCtx.fillStyle = "#c9d1d9";
+    stackedCtx.font = "bold 12px Helvetica";
+    stackedCtx.textAlign = "right";
+    var label = p.player_name + " (" + (p.team_abbr || "") + ")";
+    stackedCtx.fillText(label, pad.left - 10, y + barH / 2 + 4);
+
+    // Draw segments
+    var x = pad.left;
+    COMP_COLORS.forEach(function(cc) {
+      var count = getCompValue(p, cc.key);
+      var pct = count / sp;
+      var segW = pct * pw;
+      if (segW < 0.5) return;
+
+      stackedCtx.fillStyle = cc.color;
+      stackedCtx.fillRect(x, y, segW, barH);
+
+      // Percentage label if segment wide enough
+      if (segW > 30) {
+        stackedCtx.fillStyle = "#0d1117";
+        stackedCtx.font = "bold 10px Helvetica";
+        stackedCtx.textAlign = "center";
+        stackedCtx.fillText(Math.round(pct * 100) + "%", x + segW / 2, y + barH / 2 + 4);
+      }
+
+      stackedSegments.push({
+        px: x, py: y, pw: segW, ph: barH,
+        player: p, comp: cc.label, count: count, pct: Math.round(pct * 1000) / 10
+      });
+
+      x += segW;
+    });
+  });
+
+  // Build legend
+  var legendEl = document.getElementById("stackedLegend");
+  legendEl.innerHTML = COMP_COLORS.map(function(cc) {
+    return '<span><i style="background:' + cc.color + '"></i> ' + cc.label + '</span>';
+  }).join("");
+}
+
+// Hover tooltip
+stackedCanvas.addEventListener("mousemove", function(e) {
+  var rect = stackedCanvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+  var hit = null;
+  stackedSegments.forEach(function(seg) {
+    if (mx >= seg.px && mx <= seg.px + seg.pw && my >= seg.py && my <= seg.py + seg.ph) {
+      hit = seg;
+    }
+  });
+  if (hit) {
+    stackedTooltip.innerHTML = '<b>' + hit.player.player_name + '</b><br>' +
+      hit.comp + ': ' + hit.count + ' events (' + hit.pct + '%)';
+    stackedTooltip.style.display = "block";
+    stackedTooltip.style.left = (mx + 12) + "px";
+    stackedTooltip.style.top = (my - 10) + "px";
+  } else {
+    stackedTooltip.style.display = "none";
+  }
+});
+
+stackedCanvas.addEventListener("mouseleave", function() {
+  stackedTooltip.style.display = "none";
+});
+
+// Player search / autocomplete
+stackedSearchEl.addEventListener("input", function() {
+  var q = this.value.toLowerCase().trim();
+  if (q.length < 2) { stackedSuggest.style.display = "none"; return; }
+  var players = getPlayers();
+  var matches = players.filter(function(p) {
+    return p.player_name && p.player_name.toLowerCase().includes(q) &&
+           (p.total_scoring_poss || 0) > 0;
+  }).slice(0, 8);
+  if (matches.length === 0) { stackedSuggest.style.display = "none"; return; }
+  stackedSuggest.innerHTML = matches.map(function(p) {
+    return '<div data-pid="' + p.player_id + '">' + p.player_name + ' (' + (p.team_abbr || '') + ')</div>';
+  }).join("");
+  stackedSuggest.style.display = "block";
+});
+
+stackedSuggest.addEventListener("click", function(e) {
+  var div = e.target.closest("div[data-pid]");
+  if (!div) return;
+  var pid = div.dataset.pid;
+  var players = getPlayers();
+  var p = players.find(function(pl) { return String(pl.player_id) === pid; });
+  if (p && stackedSelected.length < 10 && !stackedSelected.find(function(s) { return String(s.player_id) === pid; })) {
+    stackedSelected.push(p);
+    updateStackedPills();
+    drawStacked();
+  }
+  stackedSearchEl.value = "";
+  stackedSuggest.style.display = "none";
+});
+
+document.addEventListener("click", function(e) {
+  if (!e.target.closest(".stacked-controls")) stackedSuggest.style.display = "none";
+});
+
+function updateStackedPills() {
+  stackedPills.innerHTML = stackedSelected.map(function(p, i) {
+    return '<span class="stacked-pill">' + p.player_name +
+           ' <span class="pill-x" data-idx="' + i + '">&times;</span></span>';
+  }).join("");
+  stackedPills.querySelectorAll(".pill-x").forEach(function(x) {
+    x.addEventListener("click", function() {
+      stackedSelected.splice(parseInt(this.dataset.idx), 1);
+      updateStackedPills();
+      drawStacked();
+    });
+  });
+}
+
+// (stacked toggle removed — now in Charts tab)
+
+// =====================================================================
+// SECTION 23c: LINE CHART (47-SEASON TRENDS)
+// =====================================================================
+var trendsWrap = document.getElementById("trendsWrap");
+var trendsCanvas = document.getElementById("trendsCanvas");
+var trendsCtx = trendsCanvas.getContext("2d");
+var trendsTooltip = document.getElementById("trendsTooltip");
+var trendsPoints = []; // [{season, sx, metrics:{pure,std,delta,tpa_rate}}]
+
+var TREND_LINES = [
+  {id: "trendPure", key: "league_pure_ts", color: "#58a6ff", label: "PS%", axis: "left"},
+  {id: "trendStd",  key: "league_std_ts",  color: "#f0883e", label: "TS%",      axis: "left"},
+  {id: "trendDelta",key: "avg_delta",      color: "#f85149", label: "Delta",    axis: "right"},
+  {id: "trend3pa",  key: "league_3pa_rate",color: "#3fb950", label: "3PA Rate", axis: "right"},
+];
+
+function drawTrends() {
+  setupHiDPI(trendsCanvas, trendsCtx, 900, 450);
+  var w = 900;
+  var h = 450;
+  var pad = {top: 25, right: 60, bottom: 55, left: 55};
+  var pw = w - pad.left - pad.right;
+  var ph = h - pad.top - pad.bottom;
+
+  trendsCtx.clearRect(0, 0, w, h);
+  trendsPoints = [];
+
+  // Build data array from SEASON_META (sorted chronologically)
+  var data = [];
+  SEASONS.slice().reverse().forEach(function(s) {
+    if (s.endsWith("-PO")) return; // Exclude playoffs from trends
+    var m = SEASON_META[s];
+    if (m) data.push({season: s, meta: m});
+  });
+  if (data.length === 0) return;
+
+  // Determine which lines are active
+  var activeLines = TREND_LINES.filter(function(tl) {
+    return document.getElementById(tl.id).checked;
+  });
+  if (activeLines.length === 0) return;
+
+  // Compute Y ranges for left and right axes
+  var leftLines = activeLines.filter(function(tl) { return tl.axis === "left"; });
+  var rightLines = activeLines.filter(function(tl) { return tl.axis === "right"; });
+
+  function getRange(lines) {
+    var vals = [];
+    lines.forEach(function(tl) {
+      data.forEach(function(d) {
+        var v = d.meta[tl.key];
+        if (v != null) vals.push(v);
+      });
+    });
+    if (vals.length === 0) return {min: 0, max: 1};
+    var mn = Math.min.apply(null, vals);
+    var mx = Math.max.apply(null, vals);
+    var pad2 = (mx - mn) * 0.08 || 1;
+    return {min: mn - pad2, max: mx + pad2};
+  }
+
+  var leftRange = leftLines.length > 0 ? getRange(leftLines) : null;
+  var rightRange = rightLines.length > 0 ? getRange(rightLines) : null;
+
+  function xPos(i) { return pad.left + (i / (data.length - 1)) * pw; }
+  function yPosLeft(v) { return pad.top + ph - ((v - leftRange.min) / (leftRange.max - leftRange.min)) * ph; }
+  function yPosRight(v) { return pad.top + ph - ((v - rightRange.min) / (rightRange.max - rightRange.min)) * ph; }
+
+  // Grid lines
+  trendsCtx.strokeStyle = "#21262d";
+  trendsCtx.lineWidth = 1;
+  var yTicks = 6;
+  for (var j = 0; j <= yTicks; j++) {
+    var yy = pad.top + ph - (j / yTicks) * ph;
+    trendsCtx.beginPath(); trendsCtx.moveTo(pad.left, yy); trendsCtx.lineTo(pad.left + pw, yy); trendsCtx.stroke();
+  }
+
+  // Y-axis labels (left)
+  if (leftRange) {
+    trendsCtx.fillStyle = "#c9d1d9";
+    trendsCtx.font = "bold 11px Helvetica";
+    trendsCtx.textAlign = "right";
+    for (var j = 0; j <= yTicks; j++) {
+      var v = leftRange.min + (leftRange.max - leftRange.min) * j / yTicks;
+      trendsCtx.fillText((Math.round(v * 10) / 10) + "%", pad.left - 8, pad.top + ph - (j / yTicks) * ph + 4);
+    }
+  }
+
+  // Y-axis labels (right)
+  if (rightRange) {
+    trendsCtx.fillStyle = "#c9d1d9";
+    trendsCtx.font = "bold 11px Helvetica";
+    trendsCtx.textAlign = "left";
+    for (var j = 0; j <= yTicks; j++) {
+      var v = rightRange.min + (rightRange.max - rightRange.min) * j / yTicks;
+      var suffix = rightLines.some(function(l) { return l.key === "league_3pa_rate"; }) ? "%" : "pp";
+      trendsCtx.fillText((Math.round(v * 10) / 10) + suffix, pad.left + pw + 8, pad.top + ph - (j / yTicks) * ph + 4);
+    }
+  }
+
+  // X-axis labels (seasons)
+  trendsCtx.fillStyle = "#c9d1d9";
+  trendsCtx.font = "bold 10px Helvetica";
+  trendsCtx.textAlign = "center";
+  var labelStep = Math.max(1, Math.floor(data.length / 12));
+  data.forEach(function(d, i) {
+    if (i % labelStep === 0 || i === data.length - 1) {
+      var x = xPos(i);
+      trendsCtx.save();
+      trendsCtx.translate(x, h - pad.bottom + 14);
+      trendsCtx.rotate(-Math.PI / 4);
+      trendsCtx.fillText(d.season, 0, 0);
+      trendsCtx.restore();
+    }
+  });
+
+  // Store screen positions for hover
+  data.forEach(function(d, i) {
+    trendsPoints.push({
+      season: d.season,
+      sx: xPos(i),
+      metrics: d.meta
+    });
+  });
+
+  // Draw lines
+  activeLines.forEach(function(tl) {
+    var yFn = tl.axis === "left" ? yPosLeft : yPosRight;
+    trendsCtx.strokeStyle = tl.color;
+    trendsCtx.lineWidth = 2.5;
+    trendsCtx.beginPath();
+    var started = false;
+    data.forEach(function(d, i) {
+      var v = d.meta[tl.key];
+      if (v == null) return;
+      var x = xPos(i);
+      var y = yFn(v);
+      if (!started) { trendsCtx.moveTo(x, y); started = true; }
+      else trendsCtx.lineTo(x, y);
+    });
+    trendsCtx.stroke();
+
+    // Dots at each data point
+    data.forEach(function(d, i) {
+      var v = d.meta[tl.key];
+      if (v == null) return;
+      trendsCtx.fillStyle = tl.color;
+      trendsCtx.beginPath();
+      trendsCtx.arc(xPos(i), yFn(v), 3, 0, Math.PI * 2);
+      trendsCtx.fill();
+    });
+  });
+
+  // Border
+  trendsCtx.strokeStyle = "#30363d";
+  trendsCtx.lineWidth = 1;
+  trendsCtx.strokeRect(pad.left, pad.top, pw, ph);
+}
+
+// Hover tooltip
+trendsCanvas.addEventListener("mousemove", function(e) {
+  var rect = trendsCanvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  // Find closest season by x position
+  var closest = null, closestDist = Infinity;
+  trendsPoints.forEach(function(tp) {
+    var dist = Math.abs(mx - tp.sx);
+    if (dist < closestDist) { closestDist = dist; closest = tp; }
+  });
+  if (closest && closestDist < 20) {
+    var m = closest.metrics;
+    var lines = [];
+    lines.push('<b>' + closest.season + '</b>');
+    TREND_LINES.forEach(function(tl) {
+      if (!document.getElementById(tl.id).checked) return;
+      var v = m[tl.key];
+      if (v == null) return;
+      var fmt = Math.round(v * 10) / 10;
+      var suffix = tl.key === "avg_delta" ? "pp" : "%";
+      lines.push('<span style="color:' + tl.color + '">' + tl.label + ': ' + fmt + suffix + '</span>');
+    });
+    trendsTooltip.innerHTML = lines.join('<br>');
+    trendsTooltip.style.display = "block";
+    trendsTooltip.style.left = (closest.sx + 12) + "px";
+    trendsTooltip.style.top = "30px";
+
+    // Draw vertical hover line
+    drawTrends();
+    trendsCtx.strokeStyle = "rgba(255,255,255,0.3)";
+    trendsCtx.lineWidth = 1;
+    trendsCtx.setLineDash([4, 3]);
+    trendsCtx.beginPath();
+    trendsCtx.moveTo(closest.sx, 25);
+    trendsCtx.lineTo(closest.sx, trendsCanvas.height - 55);
+    trendsCtx.stroke();
+    trendsCtx.setLineDash([]);
+  } else {
+    trendsTooltip.style.display = "none";
+  }
+});
+
+trendsCanvas.addEventListener("mouseleave", function() {
+  trendsTooltip.style.display = "none";
+});
+
+// (trends toggle removed — now in Charts tab)
+
+// Redraw on checkbox change
+TREND_LINES.forEach(function(tl) {
+  document.getElementById(tl.id).addEventListener("change", drawTrends);
+});
+
+// =====================================================================
+// SECTION 23c: SCATTER PLOT
+// =====================================================================
+var scatterWrap = document.getElementById("scatterWrap");
+var scatterCanvas = document.getElementById("scatterCanvas");
+var scatterCtx = scatterCanvas.getContext("2d");
+var scatterTooltip = document.getElementById("scatterTooltip");
+var scatterXSel = document.getElementById("scatterX");
+var scatterYSel = document.getElementById("scatterY");
+var scatterDots = []; // [{x, y, px, py, player}]
+var showHeadshots = false;
+var headshotCache = {}; // player_id -> Image or null (failed)
+
+// Numeric columns available for scatter axes
+function getScatterCols() {
+  return COL_DEFS.rankings.filter(function(c) {
+    return (c.fmt === "pct" || c.fmt === "int" || c.fmt === "dec1" || c.fmt === "delta") &&
+           c.key !== "_rank" && !c.locked;
+  });
+}
+
+function initScatterSelectors() {
+  var cols = getScatterCols();
+  var xHtml = "", yHtml = "";
+  cols.forEach(function(c) {
+    var xSel = c.key === "total_3pa" ? " selected" : "";
+    var ySel = c.key === "pure_ts_pct" ? " selected" : "";
+    xHtml += '<option value="' + c.key + '"' + xSel + '>' + c.label + '</option>';
+    yHtml += '<option value="' + c.key + '"' + ySel + '>' + c.label + '</option>';
+  });
+  scatterXSel.innerHTML = xHtml;
+  scatterYSel.innerHTML = yHtml;
+}
+
+function setupHiDPI(canvas, ctx, cssW, cssH) {
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = cssW * dpr;
+  canvas.height = cssH * dpr;
+  canvas.style.width = cssW + "px";
+  canvas.style.height = cssH + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function drawScatter() {
+  var players = filterPlayers();
+  var xKey = scatterXSel.value;
+  var yKey = scatterYSel.value;
+  var xLabel = scatterXSel.options[scatterXSel.selectedIndex].text;
+  var yLabel = scatterYSel.options[scatterYSel.selectedIndex].text;
+
+  setupHiDPI(scatterCanvas, scatterCtx, 900, 500);
+  var w = 900;
+  var h = 500;
+  var pad = {top: 20, right: 30, bottom: 45, left: 55};
+  var pw = w - pad.left - pad.right;
+  var ph = h - pad.top - pad.bottom;
+
+  // Get data ranges
+  var xVals = [], yVals = [];
+  var valid = [];
+  players.forEach(function(p) {
+    var xv = p[xKey], yv = p[yKey];
+    if (xv != null && yv != null && isFinite(xv) && isFinite(yv)) {
+      valid.push(p);
+      xVals.push(xv);
+      yVals.push(yv);
+    }
+  });
+
+  if (valid.length === 0) {
+    scatterCtx.clearRect(0, 0, w, h);
+    scatterCtx.fillStyle = "#8b949e";
+    scatterCtx.font = "14px Helvetica";
+    scatterCtx.fillText("No data for selected axes", w/2 - 80, h/2);
+    scatterDots = [];
+    return;
+  }
+
+  var xMin = Math.min.apply(null, xVals), xMax = Math.max.apply(null, xVals);
+  var yMin = Math.min.apply(null, yVals), yMax = Math.max.apply(null, yVals);
+  // Add 5% padding to ranges
+  var xPad = (xMax - xMin) * 0.05 || 1;
+  var yPad = (yMax - yMin) * 0.05 || 1;
+  xMin -= xPad; xMax += xPad;
+  yMin -= yPad; yMax += yPad;
+
+  function xPos(v) { return pad.left + (v - xMin) / (xMax - xMin) * pw; }
+  function yPos(v) { return pad.top + ph - (v - yMin) / (yMax - yMin) * ph; }
+
+  // Clear and draw
+  scatterCtx.clearRect(0, 0, w, h);
+
+  // Grid lines
+  scatterCtx.strokeStyle = "#21262d";
+  scatterCtx.lineWidth = 1;
+  var xTicks = 8, yTicks = 6;
+  for (var i = 0; i <= xTicks; i++) {
+    var xv = xMin + (xMax - xMin) * i / xTicks;
+    var xx = xPos(xv);
+    scatterCtx.beginPath(); scatterCtx.moveTo(xx, pad.top); scatterCtx.lineTo(xx, pad.top + ph); scatterCtx.stroke();
+  }
+  for (var j = 0; j <= yTicks; j++) {
+    var yv = yMin + (yMax - yMin) * j / yTicks;
+    var yy = yPos(yv);
+    scatterCtx.beginPath(); scatterCtx.moveTo(pad.left, yy); scatterCtx.lineTo(pad.left + pw, yy); scatterCtx.stroke();
+  }
+
+  // Axis labels
+  scatterCtx.fillStyle = "#c9d1d9";
+  scatterCtx.font = "bold 12px Helvetica";
+  scatterCtx.textAlign = "center";
+  for (var i = 0; i <= xTicks; i++) {
+    var xv = xMin + (xMax - xMin) * i / xTicks;
+    scatterCtx.fillText(Math.round(xv * 10) / 10, xPos(xv), h - pad.bottom + 18);
+  }
+  scatterCtx.textAlign = "right";
+  for (var j = 0; j <= yTicks; j++) {
+    var yv = yMin + (yMax - yMin) * j / yTicks;
+    scatterCtx.fillText(Math.round(yv * 10) / 10, pad.left - 8, yPos(yv) + 4);
+  }
+
+  // Axis titles
+  scatterCtx.fillStyle = "#c9d1d9";
+  scatterCtx.font = "13px Helvetica";
+  scatterCtx.textAlign = "center";
+  scatterCtx.fillText(xLabel, pad.left + pw / 2, h - 4);
+  scatterCtx.save();
+  scatterCtx.translate(14, pad.top + ph / 2);
+  scatterCtx.rotate(-Math.PI / 2);
+  scatterCtx.fillText(yLabel, 0, 0);
+  scatterCtx.restore();
+
+  // Draw dots on canvas
+  scatterDots = [];
+  var hsSize = 32; // headshot diameter
+
+  valid.forEach(function(p) {
+    var px = xPos(p[xKey]);
+    var py = yPos(p[yKey]);
+    scatterDots.push({x: p[xKey], y: p[yKey], px: px, py: py, player: p});
+
+    if (!showHeadshots) {
+      scatterCtx.fillStyle = "rgba(88, 166, 255, 0.6)";
+      scatterCtx.beginPath();
+      scatterCtx.arc(px, py, 4, 0, Math.PI * 2);
+      scatterCtx.fill();
+    }
+  });
+
+  // Border
+  scatterCtx.strokeStyle = "#30363d";
+  scatterCtx.lineWidth = 1;
+  scatterCtx.strokeRect(pad.left, pad.top, pw, ph);
+
+  // Headshot DOM overlay
+  var hsContainer = document.getElementById("scatterHeadshots");
+  hsContainer.innerHTML = "";
+  if (showHeadshots) {
+    scatterDots.forEach(function(d) {
+      var p = d.player;
+      var pid = String(p.player_id || "");
+      if (!pid) return;
+      var img = document.createElement("img");
+      img.src = "https://cdn.nba.com/headshots/nba/latest/260x190/" + pid + ".png";
+      img.width = hsSize;
+      img.height = hsSize;
+      img.style.left = (d.px - hsSize / 2) + "px";
+      img.style.top = (d.py - hsSize / 2) + "px";
+      img.title = "";
+      img.alt = "";
+      img.onerror = function() {
+        // Replace with a dot-style fallback
+        this.style.display = "none";
+      };
+      // Hover: show tooltip
+      img.addEventListener("mouseenter", function(e) {
+        var xLabel = scatterXSel.options[scatterXSel.selectedIndex].text;
+        var yLabel = scatterYSel.options[scatterYSel.selectedIndex].text;
+        var xFmt = Math.round(d.x * 10) / 10;
+        var yFmt = Math.round(d.y * 10) / 10;
+        var seasonSuffix = (currentSeason === "ALL" && p._season) ? ' \u2014 ' + p._season : '';
+        scatterTooltip.innerHTML = '<b>' + p.player_name + '</b> (' + (p.team_abbr || '') + ')' + seasonSuffix + '<br>' +
+          xLabel + ': ' + xFmt + '<br>' + yLabel + ': ' + yFmt;
+        scatterTooltip.style.display = "block";
+        scatterTooltip.style.left = (d.px + hsSize / 2 + 6) + "px";
+        scatterTooltip.style.top = (d.py - 10) + "px";
+      });
+      img.addEventListener("mouseleave", function() {
+        scatterTooltip.style.display = "none";
+      });
+      hsContainer.appendChild(img);
+    });
+  }
+}
+
+// Hover tooltip (dots mode only — headshot mode uses DOM hover)
+scatterCanvas.addEventListener("mousemove", function(e) {
+  if (showHeadshots) return; // DOM handles hover in headshot mode
+  var rect = scatterCanvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+  var closest = null, closestDist = Infinity;
+  scatterDots.forEach(function(d) {
+    var dist = Math.sqrt((mx - d.px) * (mx - d.px) + (my - d.py) * (my - d.py));
+    if (dist < closestDist) { closestDist = dist; closest = d; }
+  });
+  var hoverRadius = 20;
+  if (closest && closestDist < hoverRadius) {
+    var p = closest.player;
+    var xLabel = scatterXSel.options[scatterXSel.selectedIndex].text;
+    var yLabel = scatterYSel.options[scatterYSel.selectedIndex].text;
+    var xFmt = typeof closest.x === "number" ? (Math.round(closest.x * 10) / 10) : closest.x;
+    var yFmt = typeof closest.y === "number" ? (Math.round(closest.y * 10) / 10) : closest.y;
+    var seasonSuffix = (currentSeason === "ALL" && p._season) ? ' \u2014 ' + p._season : '';
+    scatterTooltip.innerHTML = '<b>' + p.player_name + '</b> (' + (p.team_abbr || '') + ')' + seasonSuffix + '<br>' +
+      xLabel + ': ' + xFmt + '<br>' + yLabel + ': ' + yFmt;
+    scatterTooltip.style.display = "block";
+    var ttLeft = closest.px + (showHeadshots ? 22 : 12);
+    scatterTooltip.style.left = ttLeft + "px";
+    scatterTooltip.style.top = (closest.py - 10) + "px";
+
+    // Redraw with highlight (dots mode)
+    drawScatter();
+    scatterCtx.fillStyle = "#f0883e";
+    scatterCtx.beginPath();
+    scatterCtx.arc(closest.px, closest.py, 6, 0, Math.PI * 2);
+    scatterCtx.fill();
+    scatterCtx.strokeStyle = "#ffffff";
+    scatterCtx.lineWidth = 1.5;
+    scatterCtx.stroke();
+  } else {
+    scatterTooltip.style.display = "none";
+  }
+});
+
+scatterCanvas.addEventListener("mouseleave", function() {
+  if (!showHeadshots) scatterTooltip.style.display = "none";
+});
+
+// (scatter toggle removed — now in Charts tab)
+
+// Headshot toggle
+document.getElementById("headshotToggle").addEventListener("click", function() {
+  showHeadshots = !showHeadshots;
+  this.textContent = showHeadshots ? "Show Dots" : "Show Headshots";
+  drawScatter();
+});
+
+// Redraw on axis change
+scatterXSel.addEventListener("change", drawScatter);
+scatterYSel.addEventListener("change", drawScatter);
+
+// =====================================================================
+// SECTION 24a: CHARTS TAB SUB-TABS
+// =====================================================================
+var activeChartTab = "scatter";
+var chartInited = {};
+
+function drawActiveChart() {
+  if (activeChartTab === "scatter" && !chartInited.scatter) {
+    initScatterSelectors();
+    chartInited.scatter = true;
+  }
+  if (activeChartTab === "histogram" && !chartInited.histogram) {
+    initHistoSelectors();
+    chartInited.histogram = true;
+  }
+  if (activeChartTab === "scatter") drawScatter();
+  else if (activeChartTab === "histogram") drawHistogram();
+  else if (activeChartTab === "trends") drawTrends();
+  else if (activeChartTab === "composition") drawStacked();
+}
+
+document.getElementById("chartSubtabBar").addEventListener("click", function(e) {
+  var btn = e.target.closest("button[data-charttab]");
+  if (!btn) return;
+  var tab = btn.dataset.charttab;
+
+  // (composition availability is handled inline in drawStacked)
+
+  activeChartTab = tab;
+  document.querySelectorAll("#chartSubtabBar button").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  document.querySelectorAll(".chart-pane").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById("chartpane-" + tab).classList.add("active");
+  updateChartHelp();
+  setTimeout(drawActiveChart, 50);
+});
+
+function updateChartHelp() {
+  document.querySelectorAll(".chart-help-item").forEach(function(el) {
+    el.classList.toggle("active", el.dataset.helpfor === activeChartTab);
+  });
+}
+updateChartHelp();
+
+document.getElementById("chartHelpBtn").addEventListener("click", function(e) {
+  e.stopPropagation();
+  document.getElementById("chartHelpPanel").classList.toggle("open");
+});
+
+// =====================================================================
+// SECTION 24b: THEME PICKER
+// =====================================================================
+var THEMES = [
+  {id: "", label: "Dark (Default)"},
+  {id: "theme-light", label: "Light"},
+  {id: "theme-midnight", label: "Midnight"},
+  {id: "theme-dark-green", label: "Dark Green"},
+  {id: "theme-dark-blue", label: "Dark Blue"},
+  {id: "theme-light-blue", label: "Light Blue"},
+  {id: "theme-solarized-dark", label: "Solarized Dark"},
+  {id: "theme-solarized-light", label: "Solarized Light"},
+  {id: "theme-monokai", label: "Monokai"},
+  {id: "theme-nord", label: "Nord"},
+  {id: "theme-dracula", label: "Dracula"},
+  {id: "theme-sepia", label: "Sepia"},
+  {id: "theme-high-contrast", label: "High Contrast"},
+  {id: "theme-nba-dark", label: "NBA Dark"},
+];
+
+var currentTheme = localStorage.getItem("pureTsTheme") || "";
+
+function applyTheme(themeId) {
+  document.body.className = themeId;
+  currentTheme = themeId;
+  localStorage.setItem("pureTsTheme", themeId);
+  buildThemeMenu();
+  // Redraw charts if open (canvas colors are hardcoded — need redraw)
+  if (activeTab === "charts") setTimeout(drawActiveChart, 50);
+}
+
+function buildThemeMenu() {
+  var menu = document.getElementById("themeMenu");
+  menu.innerHTML = THEMES.map(function(t) {
+    var cls = t.id === currentTheme ? ' class="active-theme"' : '';
+    return '<div data-theme="' + t.id + '"' + cls + '>' + t.label + '</div>';
+  }).join("");
+}
+
+document.getElementById("themeBtn").addEventListener("click", function(e) {
+  e.stopPropagation();
+  document.getElementById("themeMenu").classList.toggle("open");
+});
+
+document.getElementById("themeMenu").addEventListener("click", function(e) {
+  var div = e.target.closest("div[data-theme]");
+  if (!div) return;
+  applyTheme(div.dataset.theme);
+  document.getElementById("themeMenu").classList.remove("open");
+});
+
+document.addEventListener("click", function() {
+  document.getElementById("themeMenu").classList.remove("open");
+});
+
+// Apply saved theme on load
+if (currentTheme) document.body.className = currentTheme;
+buildThemeMenu();
+
+// =====================================================================
+// SECTION 24d: EVIDENCE TABLE
+// =====================================================================
+(function() {
+  var tbody = document.getElementById("evidenceBody");
+  if (!tbody) return;
+  SEASONS.forEach(function(s) {
+    if (s.endsWith("-PO")) return; // Exclude playoffs from evidence table
+    var m = SEASON_META[s];
+    if (!m) return;
+    var tr = document.createElement("tr");
+    var pure = m.league_pure_ts;
+    var std = m.league_std_ts;
+    var delta = m.avg_delta;
+    var tpa = m.league_3pa_rate;
+    tr.innerHTML =
+      '<td>' + s + '</td>' +
+      '<td class="num">' + (tpa != null ? tpa.toFixed(1) + '%' : '\u2014') + '</td>' +
+      '<td class="num" style="font-weight:600;color:' + pureColor(pure) + '">' + (pure != null ? pure.toFixed(1) + '%' : '\u2014') + '</td>' +
+      '<td class="num">' + (std != null ? std.toFixed(1) + '%' : '\u2014') + '</td>' +
+      '<td class="num" style="font-weight:600;color:' + deltaColor(delta) + '">' + (delta != null ? (delta >= 0 ? '+' : '') + delta.toFixed(1) + 'pp' : '\u2014') + '</td>';
+    tbody.appendChild(tr);
+  });
+})();
+
+// Season scatter plot (3PA Rate vs Delta, 47 seasons)
+(function() {
+  var canvas = document.getElementById("seasonScatterCanvas");
+  if (!canvas || !SEASONS || !SEASON_META) return;
+  var ctx = canvas.getContext("2d");
+  var tooltip = document.getElementById("seasonScatterTooltip");
+  var cssW = 700, cssH = 420;
+  setupHiDPI(canvas, ctx, cssW, cssH);
+
+  var pad = { top: 24, right: 30, bottom: 44, left: 58 };
+  var pw = cssW - pad.left - pad.right;
+  var ph = cssH - pad.top - pad.bottom;
+
+  // Build data points from SEASON_META
+  var pts = [];
+  SEASONS.forEach(function(s) {
+    if (s.endsWith("-PO")) return;
+    var m = SEASON_META[s];
+    if (!m || m.league_3pa_rate == null || m.avg_delta == null) return;
+    pts.push({ x: m.league_3pa_rate, y: m.avg_delta, season: s });
+  });
+  if (!pts.length) return;
+
+  var xVals = pts.map(function(d) { return d.x; });
+  var yVals = pts.map(function(d) { return d.y; });
+  var xMin = 0, xMax = Math.ceil(Math.max.apply(null, xVals) / 5) * 5 + 5;
+  var yMin = Math.floor(Math.min.apply(null, yVals)) - 1;
+  var yMax = 0;
+
+  function xPos(v) { return pad.left + (v - xMin) / (xMax - xMin) * pw; }
+  function yPos(v) { return pad.top + ph - (v - yMin) / (yMax - yMin) * ph; }
+
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  // Grid
+  ctx.strokeStyle = "#21262d";
+  ctx.lineWidth = 1;
+  var xTicks = 6;
+  for (var i = 0; i <= xTicks; i++) {
+    var xv = xMin + (xMax - xMin) * i / xTicks;
+    ctx.beginPath(); ctx.moveTo(xPos(xv), pad.top); ctx.lineTo(xPos(xv), pad.top + ph); ctx.stroke();
+  }
+  var yTicks = 5;
+  for (var j = 0; j <= yTicks; j++) {
+    var yv = yMin + (yMax - yMin) * j / yTicks;
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(yv)); ctx.lineTo(pad.left + pw, yPos(yv)); ctx.stroke();
+  }
+
+  // Tick labels
+  ctx.fillStyle = "#8b949e";
+  ctx.font = "11px Helvetica";
+  ctx.textAlign = "center";
+  for (var i = 0; i <= xTicks; i++) {
+    var xv = xMin + (xMax - xMin) * i / xTicks;
+    ctx.fillText(Math.round(xv) + "%", xPos(xv), cssH - pad.bottom + 16);
+  }
+  ctx.textAlign = "right";
+  for (var j = 0; j <= yTicks; j++) {
+    var yv = yMin + (yMax - yMin) * j / yTicks;
+    ctx.fillText(yv.toFixed(0) + "pp", pad.left - 8, yPos(yv) + 4);
+  }
+
+  // Axis titles
+  ctx.fillStyle = "#c9d1d9";
+  ctx.font = "12px Helvetica";
+  ctx.textAlign = "center";
+  ctx.fillText("League 3PA Rate", pad.left + pw / 2, cssH - 4);
+  ctx.save();
+  ctx.translate(14, pad.top + ph / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText("League Delta (PS% minus TS%)", 0, 0);
+  ctx.restore();
+
+  // Regression line: Delta = -0.91 + (-0.208 * 3PA Rate)
+  ctx.strokeStyle = "rgba(240, 136, 62, 0.5)";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  var rlY0 = -0.91 + (-0.208 * xMin);
+  var rlY1 = -0.91 + (-0.208 * xMax);
+  ctx.beginPath();
+  ctx.moveTo(xPos(xMin), yPos(Math.min(rlY0, yMax)));
+  ctx.lineTo(xPos(xMax), yPos(Math.max(rlY1, yMin)));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // R² label
+  ctx.fillStyle = "#8b949e";
+  ctx.font = "11px Helvetica";
+  ctx.textAlign = "right";
+  ctx.fillText("R\u00b2 = 0.9986", pad.left + pw - 4, pad.top + 14);
+
+  // Border
+  ctx.strokeStyle = "#30363d";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(pad.left, pad.top, pw, ph);
+
+  // Dots
+  var dotData = [];
+  pts.forEach(function(d) {
+    var px = xPos(d.x);
+    var py = yPos(d.y);
+    ctx.fillStyle = "rgba(88, 166, 255, 0.8)";
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(88, 166, 255, 0.3)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    dotData.push({ px: px, py: py, d: d });
+  });
+
+  // Hover
+  canvas.addEventListener("mousemove", function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var closest = null, closestDist = Infinity;
+    dotData.forEach(function(dd) {
+      var dist = Math.sqrt((mx - dd.px) * (mx - dd.px) + (my - dd.py) * (my - dd.py));
+      if (dist < closestDist) { closestDist = dist; closest = dd; }
+    });
+    if (closest && closestDist < 20) {
+      var d = closest.d;
+      tooltip.innerHTML = '<b>' + d.season + '</b><br>' +
+        '3PA Rate: ' + d.x.toFixed(1) + '%<br>' +
+        'Delta: ' + d.y.toFixed(1) + 'pp';
+      tooltip.style.display = "block";
+      tooltip.style.left = (closest.px + 10) + "px";
+      tooltip.style.top = (closest.py - 10) + "px";
+    } else {
+      tooltip.style.display = "none";
+    }
+  });
+  canvas.addEventListener("mouseleave", function() {
+    tooltip.style.display = "none";
+  });
+})();
+
+// Era comparison table
+(function() {
+  var tbody = document.getElementById("eraCompBody");
+  if (!tbody || !ERA_COMP) return;
+  ERA_COMP.forEach(function(row) {
+    var tr = document.createElement("tr");
+    var tpaRate = row.tpa_rate;
+    var pure = row.pure_ts_pct;
+    var std = row.standard_ts_pct;
+    var delta = row.delta_pp;
+    tr.innerHTML =
+      '<td>' + row.player_name + '</td>' +
+      '<td>' + row.season + '</td>' +
+      '<td class="num">' + (tpaRate != null ? tpaRate.toFixed(1) + '%' : '\u2014') + '</td>' +
+      '<td class="num" style="font-weight:600;color:' + pureColor(pure) + '">' + (pure != null ? pure.toFixed(1) + '%' : '\u2014') + '</td>' +
+      '<td class="num">' + (std != null ? std.toFixed(1) + '%' : '\u2014') + '</td>' +
+      '<td class="num" style="font-weight:600;color:' + deltaColor(delta) + '">' + (delta != null ? (delta >= 0 ? '+' : '') + delta.toFixed(1) + 'pp' : '\u2014') + '</td>';
+    tbody.appendChild(tr);
+  });
+})();
+
+// Era comparison scatter plot (3PA Rate vs Delta, headshots)
+(function() {
+  var canvas = document.getElementById("eraScatterCanvas");
+  if (!canvas || !ERA_COMP || !ERA_COMP.length) return;
+  var ctx = canvas.getContext("2d");
+  var tooltip = document.getElementById("eraScatterTooltip");
+  var hsContainer = document.getElementById("eraScatterHeadshots");
+  var cssW = 700, cssH = 420;
+  setupHiDPI(canvas, ctx, cssW, cssH);
+
+  var pad = { top: 24, right: 30, bottom: 44, left: 58 };
+  var pw = cssW - pad.left - pad.right;
+  var ph = cssH - pad.top - pad.bottom;
+
+  // Data: x = 3PA Rate, y = Delta
+  var pts = ERA_COMP.filter(function(d) { return d.tpa_rate != null && d.delta_pp != null; })
+    .map(function(d) {
+      return { x: d.tpa_rate, y: d.delta_pp, name: d.player_name, season: d.season,
+               pid: d.player_id, pure: d.pure_ts_pct, std: d.standard_ts_pct };
+    });
+
+  var yVals = pts.map(function(d) { return d.y; });
+  var xMin = 0, xMax = Math.ceil(Math.max.apply(null, pts.map(function(d){return d.x;})) / 5) * 5 + 5;
+  var yMin = Math.floor(Math.min.apply(null, yVals)) - 1;
+  var yMax = 0;
+
+  function xPos(v) { return pad.left + (v - xMin) / (xMax - xMin) * pw; }
+  function yPos(v) { return pad.top + ph - (v - yMin) / (yMax - yMin) * ph; }
+
+  // Draw canvas (grid, axes, border)
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  // Grid lines
+  ctx.strokeStyle = "#21262d";
+  ctx.lineWidth = 1;
+  var xTicks = 6;
+  for (var i = 0; i <= xTicks; i++) {
+    var xv = xMin + (xMax - xMin) * i / xTicks;
+    var xx = xPos(xv);
+    ctx.beginPath(); ctx.moveTo(xx, pad.top); ctx.lineTo(xx, pad.top + ph); ctx.stroke();
+  }
+  var yTicks = 5;
+  for (var j = 0; j <= yTicks; j++) {
+    var yv = yMin + (yMax - yMin) * j / yTicks;
+    var yy = yPos(yv);
+    ctx.beginPath(); ctx.moveTo(pad.left, yy); ctx.lineTo(pad.left + pw, yy); ctx.stroke();
+  }
+
+  // Axis tick labels
+  ctx.fillStyle = "#8b949e";
+  ctx.font = "11px Helvetica";
+  ctx.textAlign = "center";
+  for (var i = 0; i <= xTicks; i++) {
+    var xv = xMin + (xMax - xMin) * i / xTicks;
+    ctx.fillText(Math.round(xv) + "%", xPos(xv), cssH - pad.bottom + 16);
+  }
+  ctx.textAlign = "right";
+  for (var j = 0; j <= yTicks; j++) {
+    var yv = yMin + (yMax - yMin) * j / yTicks;
+    ctx.fillText(yv.toFixed(0) + "pp", pad.left - 8, yPos(yv) + 4);
+  }
+
+  // Axis titles
+  ctx.fillStyle = "#c9d1d9";
+  ctx.font = "12px Helvetica";
+  ctx.textAlign = "center";
+  ctx.fillText("3PA Rate", pad.left + pw / 2, cssH - 4);
+  ctx.save();
+  ctx.translate(14, pad.top + ph / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText("Delta (PS% minus TS%)", 0, 0);
+  ctx.restore();
+
+  // Border
+  ctx.strokeStyle = "#30363d";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(pad.left, pad.top, pw, ph);
+
+  // Headshot images
+  var hsSize = 36;
+  hsContainer.innerHTML = "";
+  var dotData = [];
+
+  pts.forEach(function(d) {
+    var px = xPos(d.x);
+    var py = yPos(d.y);
+    dotData.push({ px: px, py: py, d: d });
+
+    var pid = String(d.pid || "");
+    if (!pid) return;
+
+    var img = document.createElement("img");
+    img.src = "https://cdn.nba.com/headshots/nba/latest/260x190/" + pid + ".png";
+    img.width = hsSize;
+    img.height = hsSize;
+    img.style.left = (px - hsSize/2) + "px";
+    img.style.top = (py - hsSize/2) + "px";
+    img.title = "";
+    img.alt = "";
+    img.onerror = function() {
+      // Fallback: draw a dot on canvas
+      this.style.display = "none";
+      ctx.fillStyle = "rgba(88, 166, 255, 0.8)";
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+    };
+
+    img.addEventListener("mouseenter", function(e) {
+      tooltip.innerHTML = '<b>' + d.name + '</b> (' + d.season + ')<br>' +
+        '3PA Rate: ' + d.x.toFixed(1) + '%<br>' +
+        'Delta: ' + d.y.toFixed(1) + 'pp<br>' +
+        'PS%: ' + (d.pure != null ? d.pure.toFixed(1) + '%' : '\u2014') + '<br>' +
+        'TS%: ' + (d.std != null ? d.std.toFixed(1) + '%' : '\u2014');
+      tooltip.style.display = "block";
+      tooltip.style.left = (px + hsSize/2 + 6) + "px";
+      tooltip.style.top = (py - 10) + "px";
+    });
+    img.addEventListener("mouseleave", function() {
+      tooltip.style.display = "none";
+    });
+
+    hsContainer.appendChild(img);
+  });
+})();
+
+// SECTION 24c: INITIALIZATION
+// =====================================================================
+initSeasonSelector();
+updateTabAvailability();
+updateSeasonHeader();
+buildColManager();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# ===== Large caches (regenerable) =====
+data/pbp_cache/
+data/bbref_pbp_cache/
+data/league_results/
+
+# ===== Backup / intermediate files =====
+data/backup_csvs/
+data/bbref_league_results/
+data/*.json
+
+# ===== Generated viewer outputs =====
+viewer/pure_ts_league_viewer.html
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== macOS =====
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ===== IDE / tools =====
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+*~
