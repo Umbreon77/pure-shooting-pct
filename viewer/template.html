@@ -770,8 +770,8 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 <p>Shooting efficiency, at its core, answers a simple question: of all the points a player could have scored given the attempts they took, how many did they actually score? This is already how we measure efficiency for individual shot types. A player who goes 4 for 10 on 3-pointers shot 40%. Said another way, they scored 12 points out of a possible 30 points on their 3-point attempts. A player who goes 7 for 10 on free throws shot 70%, scoring 7 points out of a possible 10. This works cleanly because both the numerator and denominator deal in the same unit: 3-point shots divided by 3-point shots, free throws divided by free throws.</p>
 <p>Standard NBA box scores provide 3-point and free throw attempts, makes, and the subsequent efficiency expressed as a percentage. 3P% simply equals 3PM / 3PA. This is a true percentage and an accurate calculation of 3-point efficiency. A player&rsquo;s 3-point shooting efficiency is how many threes they made out of all the threes they took. That makes sense intuitively, and it should.</p>
 <p>However, standard box scores do not separate 2-point and 3-point field goal attempts. All shot attempts from the field are combined into a single number: FGA. This is where the problem begins.</p>
-<p>Because a 2-point field goal is worth 2 points and a 3-point field goal is worth 3, a single FGA figure blends two different scoring values together. Dividing total field goals made by total field goal attempts does not produce a meaningful efficiency number, because making a 3-pointer generates more points than making a 2-pointer from the same number of attempts. Despite this structural limitation, the resulting FG% is a stat often referenced for both players and teams. This also belies that it does not consider free throws at all.</p>
-<p>The methodology behind 3P% and FT% is sound, both logically and mathematically: points scored divided by points possible. TS% strays from this methodology in an attempt to reconcile the difference in point values, and account for free throws, introducing approximations and a denominator structure that distorts the answer, particularly for players who shoot 3-pointers. PS% restores the sound methodology to what shooting efficiency was always intended to measure: points scored divided by points possible. It applies this across all three ways a player can score (2-point field goals, 3-point field goals, and free throws), producing a single figure.</p>
+<p>Because a 2-point field goal is worth 2 points and a 3-point field goal is worth 3, a single FGA figure blends two different scoring values together. Dividing total field goals made by total field goal attempts does not produce a meaningful efficiency number, because making a 3-pointer generates more points than making a 2-pointer from the same number of attempts. Despite this structural limitation, the resulting FG% is a stat often referenced for both players and teams. FG% also ignores free throws entirely.</p>
+<p>The methodology behind 3P% and FT% is sound, both logically and mathematically: points scored divided by points possible. TS% strays from this methodology in an attempt to reconcile the difference in point values, and account for free throws, introducing approximations and a denominator structure that distorts the answer, particularly for players who shoot 3-pointers. Pure Shooting % (PS%) restores the sound methodology to what shooting efficiency was always intended to measure: points scored divided by points possible. It applies this across all three ways a player can score (2-point field goals, 3-point field goals, and free throws), producing a single figure.</p>
 <p>True Shooting Percentage uses this formula:</p>
 <pre>TS% = PTS / (2 &times; (FGA + 0.44 &times; FTA))</pre>
 <p>A common criticism of TS% is that the 0.44 coefficient is an approximation. But the 0.44 is actually the least broken part of this formula. The more significant flaw is the <strong>2</strong> in the denominator.</p>
@@ -784,10 +784,10 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 <li>A three-point shooting foul earns three</li>
 </ul>
 <p>The 0.44 is a league-wide average designed to collapse all of these into a single approximation.</p>
-<p>Across 1,104 qualified player-seasons in our play-by-play dataset (2020-21 through 2025-26), the actual league-wide coefficient is approximately <strong>0.453</strong>. Using 0.44 instead produces a mean error of <strong>+0.19 percentage points</strong>. About 90% of players fall within 0.05 of the true coefficient.</p>
+<p>Across 5,510 qualified player-seasons in our play-by-play dataset (30 seasons, 1996-97 through 2025-26), the actual league-wide coefficient is approximately <strong>0.467</strong>. Using 0.44 instead produces a mean error of <strong>+0.34 percentage points</strong>. About 91% of players fall within 0.05 of the true coefficient.</p>
 <p>That is a small error. Within a single game, the 0.44 can produce noticeable distortions, particularly when a player&rsquo;s foul mix deviates from the league average. But across a full season, the coefficient&rsquo;s inaccuracy is real and worth fixing, not the catastrophic distortion people think it is.</p>
 <p><strong>The 0.44 is a problem. It is not the problem.</strong></p>
-<p>The 0.44 contributes +0.19pp of error on average. The &ldquo;2&rdquo; contributes approximately 9-10pp. The part people criticize is roughly 50 times smaller than the less discussed structural flaw. Both figures are derived from the play-by-play and box score data on this site.</p>
+<p>The 0.44 contributes +0.34pp of error on average. The &ldquo;2&rdquo; contributes approximately 9-10pp. The part people criticize is roughly 30 times smaller than the less discussed structural flaw. Both figures are derived from the play-by-play and box score data on this site.</p>
 
 <h2>Problem 2 (Fatal): The &ldquo;2&rdquo; in the Denominator</h2>
 <p>The standard formula divides everything by <code>2 &times; (FGA + 0.44 &times; FTA)</code>. This means every attempt is treated as if its maximum value is 2 points. A player who scores 20 points on 20 attempts gets 20/40 = 50%. That works fine for 2-pointers, but a 3-pointer is worth more than 2.</p>
@@ -814,16 +814,16 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 <tr><td>2/5 on 3s + 3/5 on 2s</td><td>12 pts, 10 FGA, 0 FTA</td><td>12</td><td>60.0%</td><td>48.0%</td></tr>
 </tbody>
 </table>
-<p>Two players shoot 50% from the field on the same number of attempts. PS% correctly gives both 50%. TS% says the 3-point shooter was 25 percentage points more efficient, for shooting the exact same percentage from a different spot on the floor.</p>
+<p>The first two players each shoot 50% from the field on the same number of attempts. PS% correctly gives both 50%. TS% says the 3-point shooter was 25 percentage points more efficient, for shooting the exact same percentage from a different spot on the floor.</p>
 <p>This is not a rounding error. It is a structural flaw baked into the formula&rsquo;s design.</p>
 
 <h2>What This Looks Like in Practice</h2>
 <table class="about-table">
 <thead><tr><th>Player</th><th>Season</th><th>3PT Attempt Rate</th><th>TS%</th><th>PS%</th><th>Distortion</th></tr></thead>
 <tbody>
-<tr><td>AJ Green</td><td>2025-26</td><td>85.8%</td><td>60.94%</td><td>43.37%</td><td>+17.0 pp</td></tr>
+<tr><td>Duncan Robinson</td><td>2021-22</td><td>86.0%</td><td>57.32%</td><td>40.38%</td><td>+16.9 pp</td></tr>
 <tr><td>Steph Curry</td><td>2020-21</td><td>51.8%</td><td>65.47%</td><td>53.03%</td><td>+12.8 pp</td></tr>
-<tr><td>Shai Gilgeous-Alexander</td><td>2025-26</td><td>22.3%</td><td>66.30%</td><td>59.50%</td><td>+6.9 pp</td></tr>
+<tr><td>Shai Gilgeous-Alexander</td><td>2024-25</td><td>26.4%</td><td>63.51%</td><td>56.07%</td><td>+7.4 pp</td></tr>
 <tr><td>Deandre Ayton</td><td>2023-24</td><td>6.6%</td><td>58.48%</td><td>57.96%</td><td>+0.5 pp</td></tr>
 </tbody>
 </table>
@@ -836,7 +836,7 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 <p><strong>Historical and era comparisons:</strong> Increasingly unfit. The NBA has shifted dramatically toward 3PT attempts over the past decade. Comparing a 2010 player at 20% 3PT rate against a 2025 player at 50% 3PT rate using TS% conflates efficiency improvement with shot-type inflation.</p>
 
 <h2>When A &ldquo;Percentage&rdquo; Exceeds 100%</h2>
-<p>A percentage that exceeds 100% is not a percentage. Across six NBA seasons (2020-21 through 2025-26), <strong>283 individual games</strong> produced a TS% above 100%, in games with at least 10 scoring possessions. These are not obscure bench performances. They include All-Stars and playoff starters:</p>
+<p>A percentage that exceeds 100% is not a percentage. Across 30 NBA seasons of play-by-play data (1996-97 through 2025-26), <strong>793 individual games</strong> produced a TS% above 100%, in games with at least 10 scoring possessions. These are not obscure bench performances. They include All-Stars and playoff starters:</p>
 <table class="about-table">
 <thead><tr><th>Player</th><th>Date</th><th>Line</th><th>TS%</th><th>PS%</th></tr></thead>
 <tbody>
@@ -945,14 +945,17 @@ Unsimplified formula: PS% = (2&times;2PM + 3&times;3PM + FTM) / (2&times;2PA + 3
 <tbody>
 <tr><td><strong>Rankings</strong></td><td>Season-level PS% for every player, with full shooting splits (FG, 3P, 2P, FT), sortable and filterable.</td></tr>
 <tr><td><strong>Foul Profile</strong></td><td>How each player&rsquo;s scoring events break down by type. Shows the composition of a player&rsquo;s scoring, not just the efficiency.</td></tr>
-<tr><td><strong>FT by Type</strong></td><td>Free throw make rate broken out by the type of foul that produced the free throws. This data is not available from any other public source.</td></tr>
-<tr><td><strong>All Game Logs</strong></td><td>Individual game performances with per-game PS%, TS%, and Delta. Use the delta slider to filter to high-distortion games, and the quarter filter to view quarter-level efficiency breakdowns.</td></tr>
+<tr><td><strong>FT by Type</strong></td><td>Free throw make rate broken out by the type of foul that produced the free throws. This breakdown is not commonly available from public NBA data sources.</td></tr>
+<tr><td><strong>All Game Logs</strong></td><td>Individual game performances with per-game PS%, TS%, and Delta. Use the delta slider to filter to high-distortion games, and the quarter filter to view per-quarter box score and efficiency data.</td></tr>
+<tr><td><strong>Charts</strong></td><td>Scatter plot, histogram, 47-season trends line chart, and scoring composition stacked bars. Toggle headshots on the scatter plot. Available chart types depend on the selected season.</td></tr>
+<tr><td><strong>About</strong></td><td>Explanation of the TS% problem, PS% methodology, historical evidence table, and cross-era comparison scatter plot.</td></tr>
 </tbody>
 </table>
 
 <h2>Data Source &amp; Methodology</h2>
 <p><strong>Data source:</strong> PS% is calculated across all 47 seasons (1979-80 through 2025-26) using box score data (PTS, FGA, 3PA, FTA). Play-by-play component data (foul profiles, And-1 rates, hidden possessions) is available for 30 seasons: 6 via NBA CDN (2020-21 through 2025-26) and 24 via Basketball Reference (1996-97 through 2019-20). The remaining 17 seasons (1979-80 through 1995-96) have headline PS% but no PBP component breakdowns.</p>
 <p>Season-level stats are aggregated from raw totals across all games, not averaged from per-game percentages. A 40-point game and a 2-point game contribute proportionally to the season number.</p>
+<p>Playoff data is available separately for 46 seasons (1979-80 through 2024-25). Seasons 1996-97 through 2024-25 include full PBP component breakdowns and game logs; 1979-80 through 1995-96 include headline PS% from box scores. Playoff seasons are accessible via the season selector as separate entries (e.g., &ldquo;2023-24 Playoffs&rdquo;).</p>
 
 </div><!-- /subtab-methodology -->
 
@@ -960,15 +963,16 @@ Unsimplified formula: PS% = (2&times;2PM + 3&times;3PM + FTM) / (2&times;2PA + 3
 
 <h2>47 Seasons of Evidence (1979-80 to 2025-26)</h2>
 <p>The distortion between TS% and PS% is not a recent phenomenon. It has grown steadily since the introduction of the 3-point line in 1979-80, tracking almost perfectly with the league-wide 3-point attempt rate.</p>
-<table class="about-table" id="evidenceTable">
-<thead><tr><th>Season</th><th>3PA Rate</th><th>PS%</th><th>TS%</th><th>Delta</th></tr></thead>
-<tbody id="evidenceBody"></tbody>
-</table>
 
 <div style="position:relative;display:inline-block;margin:20px 0;">
   <canvas id="seasonScatterCanvas" width="700" height="420" style="background:#0d1117;border-radius:4px;display:block;"></canvas>
   <div id="seasonScatterTooltip" style="display:none;position:absolute;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:6px 10px;font-size:12px;color:#c9d1d9;pointer-events:none;white-space:nowrap;z-index:10;"></div>
 </div>
+
+<table class="about-table" id="evidenceTable">
+<thead><tr><th>Season</th><th>3PA Rate</th><th>PS%</th><th>TS%</th><th>Delta</th></tr></thead>
+<tbody id="evidenceBody"></tbody>
+</table>
 
 </div><!-- /subtab-historical -->
 

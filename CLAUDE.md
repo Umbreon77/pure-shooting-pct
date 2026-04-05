@@ -153,8 +153,9 @@ python3 viewer/build_viewer.py           # Rebuild split output
 - "Last updated" timestamp auto-generated at build time
 - `.gitignore` configured: excludes PBP caches (~7 GB), monolith, and regenerable artifacts
 
+- **Deployed** at https://pureshooting.netlify.app/
+
 ### Pending
-- Deploy: push to GitHub (Umbreon77), connect to Netlify, launch
 - 2025-26 playoffs (waiting for season to progress)
 - Viewer enhancements from `docs/outstanding_consolidated.md` (player comparison tool, exportable chart PNGs, position filter)
 

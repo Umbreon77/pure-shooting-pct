@@ -81,11 +81,15 @@ Use the **Columns** button on any tab to show or hide columns. Drag column heade
 |---|---|
 | **Rankings** | Season-level PS% for every player, with full shooting splits (FG, 3P, 2P, FT), sortable and filterable. |
 | **Foul Profile** | How each player's scoring events break down by type. Shows the composition of a player's scoring, not just the efficiency. |
-| **FT by Type** | Free throw make rate broken out by the type of foul that produced the free throws. This data is not available from any other public source. |
-| **All Game Logs** | Individual game performances with per-game PS%, TS%, and Delta. Use the delta slider to filter to high-distortion games, and the quarter filter to view quarter-level efficiency breakdowns. |
+| **FT by Type** | Free throw make rate broken out by the type of foul that produced the free throws. This breakdown is not commonly available from public NBA data sources. |
+| **All Game Logs** | Individual game performances with per-game PS%, TS%, and Delta. Use the delta slider to filter to high-distortion games, and the quarter filter to view per-quarter box score and efficiency data. |
+| **Charts** | Scatter plot, histogram, 47-season trends line chart, and scoring composition stacked bars. Toggle headshots on the scatter plot. Available chart types depend on the selected season. |
+| **About** | Explanation of the TS% problem, PS% methodology, historical evidence table, and cross-era comparison scatter plot. |
 
 ## Data Source & Methodology
 
 **Data source:** PS% is calculated across all 47 seasons (1979-80 through 2025-26) using box score data (PTS, FGA, 3PA, FTA). Play-by-play component data (foul profiles, And-1 rates, hidden possessions) is available for 30 seasons: 6 via NBA CDN (2020-21 through 2025-26) and 24 via Basketball Reference (1996-97 through 2019-20). The remaining 17 seasons (1979-80 through 1995-96) have headline PS% but no PBP component breakdowns.
 
 Season-level stats are aggregated from raw totals across all games, not averaged from per-game percentages. A 40-point game and a 2-point game contribute proportionally to the season number.
+
+Playoff data is available separately for 46 seasons (1979-80 through 2024-25). Seasons 1996-97 through 2024-25 include full PBP component breakdowns and game logs; 1979-80 through 1995-96 include headline PS% from box scores. Playoff seasons are accessible via the season selector as separate entries (e.g., "2023-24 Playoffs").

@@ -251,7 +251,7 @@ def build():
     # --- 8. Footer ---
     story.append(HRFlowable(width="100%", thickness=0.5, color=LIGHT_GRAY, spaceBefore=1, spaceAfter=1))
     story.append(Paragraph(
-        "PS% data available for all NBA players, 47 seasons (1979-80 through 2025-26)",
+        "PS% data available for all NBA players, 47 regular seasons + 46 playoff seasons (1979-80 through 2025-26)",
         footer_style
     ))
 

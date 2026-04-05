@@ -8,9 +8,9 @@ Standard NBA box scores provide 3-point and free throw attempts, makes, and the 
 
 However, standard box scores do not separate 2-point and 3-point field goal attempts. All shot attempts from the field are combined into a single number: FGA. This is where the problem begins.
 
-Because a 2-point field goal is worth 2 points and a 3-point field goal is worth 3, a single FGA figure blends two different scoring values together. Dividing total field goals made by total field goal attempts does not produce a meaningful efficiency number, because making a 3-pointer generates more points than making a 2-pointer from the same number of attempts. Despite this structural limitation, the resulting FG% is a stat often referenced for both players and teams. This also belies that it does not consider free throws at all.
+Because a 2-point field goal is worth 2 points and a 3-point field goal is worth 3, a single FGA figure blends two different scoring values together. Dividing total field goals made by total field goal attempts does not produce a meaningful efficiency number, because making a 3-pointer generates more points than making a 2-pointer from the same number of attempts. Despite this structural limitation, the resulting FG% is a stat often referenced for both players and teams. FG% also ignores free throws entirely.
 
-The methodology behind 3P% and FT% is sound, both logically and mathematically: points scored divided by points possible. TS% strays from this methodology in an attempt to reconcile the difference in point values, and account for free throws, introducing approximations and a denominator structure that distorts the answer, particularly for players who shoot 3-pointers. PS% restores the sound methodology to what shooting efficiency was always intended to measure: points scored divided by points possible. It applies this across all three ways a player can score (2-point field goals, 3-point field goals, and free throws), producing a single figure.
+The methodology behind 3P% and FT% is sound, both logically and mathematically: points scored divided by points possible. TS% strays from this methodology in an attempt to reconcile the difference in point values, and account for free throws, introducing approximations and a denominator structure that distorts the answer, particularly for players who shoot 3-pointers. Pure Shooting % (PS%) restores the sound methodology to what shooting efficiency was always intended to measure: points scored divided by points possible. It applies this across all three ways a player can score (2-point field goals, 3-point field goals, and free throws), producing a single figure.
 
 True Shooting Percentage uses this formula:
 
@@ -30,13 +30,13 @@ The 0.44 exists to estimate how many possessions free throws consumed. Not every
 
 The 0.44 is a league-wide average designed to collapse all of these into a single approximation.
 
-Across 1,104 qualified player-seasons in our play-by-play dataset (2020-21 through 2025-26), the actual league-wide coefficient is approximately **0.453**. Using 0.44 instead produces a mean error of **+0.19 percentage points**. About 90% of players fall within 0.05 of the true coefficient.
+Across 5,510 qualified player-seasons in our play-by-play dataset (30 seasons, 1996-97 through 2025-26), the actual league-wide coefficient is approximately **0.467**. Using 0.44 instead produces a mean error of **+0.34 percentage points**. About 91% of players fall within 0.05 of the true coefficient.
 
 That is a small error. Within a single game, the 0.44 can produce noticeable distortions, particularly when a player's foul mix deviates from the league average. But across a full season, the coefficient's inaccuracy is real and worth fixing, not the catastrophic distortion people think it is.
 
 **The 0.44 is a problem. It is not the problem.**
 
-The 0.44 contributes +0.19pp of error on average. The "2" contributes approximately 9-10pp. The part people criticize is roughly 50 times smaller than the less discussed structural flaw. Both figures are derived from the play-by-play and box score data on this site.
+The 0.44 contributes +0.34pp of error on average. The "2" contributes approximately 9-10pp. The part people criticize is roughly 30 times smaller than the less discussed structural flaw. Both figures are derived from the play-by-play and box score data on this site.
 
 ## Problem 2 (Fatal): The "2" in the Denominator
 
@@ -66,7 +66,7 @@ All four players scored every possible point on every attempt. PS% gives all fou
 | 3/5 on 3s + 2/5 on 2s | 13 pts, 10 FGA, 0 FTA | 13 | 65.0% | 52.0% |
 | 2/5 on 3s + 3/5 on 2s | 12 pts, 10 FGA, 0 FTA | 12 | 60.0% | 48.0% |
 
-Two players shoot 50% from the field on the same number of attempts. PS% correctly gives both 50%. TS% says the 3-point shooter was 25 percentage points more efficient, for shooting the exact same percentage from a different spot on the floor.
+The first two players each shoot 50% from the field on the same number of attempts. PS% correctly gives both 50%. TS% says the 3-point shooter was 25 percentage points more efficient, for shooting the exact same percentage from a different spot on the floor.
 
 This is not a rounding error. It is a structural flaw baked into the formula's design.
 
@@ -74,9 +74,9 @@ This is not a rounding error. It is a structural flaw baked into the formula's d
 
 | Player | Season | 3PT Attempt Rate | TS% | PS% | Distortion |
 |---|---|---|---|---|---|
-| AJ Green | 2025-26 | 85.8% | 60.94% | 43.37% | +17.0 pp |
+| Duncan Robinson | 2021-22 | 86.0% | 57.32% | 40.38% | +16.9 pp |
 | Steph Curry | 2020-21 | 51.8% | 65.47% | 53.03% | +12.8 pp |
-| Shai Gilgeous-Alexander | 2025-26 | 22.3% | 66.30% | 59.50% | +6.9 pp |
+| Shai Gilgeous-Alexander | 2024-25 | 26.4% | 63.51% | 56.07% | +7.4 pp |
 | Deandre Ayton | 2023-24 | 6.6% | 58.48% | 57.96% | +0.5 pp |
 
 The distortion is not random noise. It is almost perfectly correlated with 3PT attempt rate. Players who live behind the arc are systematically overrated by TS%. Players who live at the rim are barely affected. The average distortion across the league is **~9-10 percentage points**, ranging from about 0.5pp to 17.5pp at the individual player level.
@@ -91,7 +91,7 @@ The distortion is not random noise. It is almost perfectly correlated with 3PT a
 
 ## When A "Percentage" Exceeds 100%
 
-A percentage that exceeds 100% is not a percentage. Across six NBA seasons (2020-21 through 2025-26), **283 individual games** produced a TS% above 100%, in games with at least 10 scoring possessions. These are not obscure bench performances. They include All-Stars and playoff starters:
+A percentage that exceeds 100% is not a percentage. Across 30 NBA seasons of play-by-play data (1996-97 through 2025-26), **793 individual games** produced a TS% above 100%, in games with at least 10 scoring possessions. These are not obscure bench performances. They include All-Stars and playoff starters:
 
 | Player | Date | Line | TS% | PS% |
 |---|---|---|---|---|
