@@ -70,7 +70,7 @@ The formula was originally derived by classifying every scoring event into 12 pl
 | **Delta** | PS% minus TS%. Negative means TS% overrated the player. The gap is driven primarily by the "2" denominator in TS% which inflates 3-point shooters. |
 | **Scoring Possessions (SP)** | Total scoring events: FGA + non-shooting foul events. Broader than FGA because it includes events that produce FTAs but no FGA (shooting fouls, bonus fouls, etc.). |
 | **And-1 Rate** | % of made field goals that resulted in an And-1. |
-| **Foul Draw Rate** | % of scoring possessions that involved any foul. |
+| **SP Foul Rate** | % of a player's scoring possessions that involved a foul. Different from the standard "fouls drawn" stat which uses total possessions as the denominator. |
 | **Hidden Possessions** | Scoring events that produced zero FGAs in the box score (shooting fouls, bonus fouls, etc.). Shows how much of a player's scoring activity is invisible to FGA-based stats. |
 
 Use the **Columns** button on any tab to show or hide columns. Drag column headers to reorder them. Use the **Download** button to export the currently visible, filtered data as CSV or Excel.

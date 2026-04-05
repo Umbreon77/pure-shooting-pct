@@ -932,7 +932,7 @@ Unsimplified formula: PS% = (2&times;2PM + 3&times;3PM + FTM) / (2&times;2PA + 3
 <tr><td><strong>Delta</strong></td><td>PS% minus TS%. Negative means TS% overrated the player. The gap is driven primarily by the &ldquo;2&rdquo; denominator in TS% which inflates 3-point shooters.</td></tr>
 <tr><td><strong>Scoring Possessions (SP)</strong></td><td>Total scoring events: FGA + non-shooting foul events. Broader than FGA because it includes events that produce FTAs but no FGA (shooting fouls, bonus fouls, etc.).</td></tr>
 <tr><td><strong>And-1 Rate</strong></td><td>% of made field goals that resulted in an And-1.</td></tr>
-<tr><td><strong>Foul Draw Rate</strong></td><td>% of scoring possessions that involved any foul.</td></tr>
+<tr><td><strong>SP Foul Rate</strong></td><td>% of a player&rsquo;s scoring possessions that involved a foul. Different from the standard &ldquo;fouls drawn&rdquo; stat which uses total possessions as the denominator.</td></tr>
 <tr><td><strong>Hidden Possessions</strong></td><td>Scoring events that produced zero FGAs in the box score (shooting fouls, bonus fouls, etc.). Shows how much of a player&rsquo;s scoring activity is invisible to FGA-based stats.</td></tr>
 </tbody>
 </table>
@@ -1074,7 +1074,7 @@ const COL_DEFS = {
     { key: "fp_penalty",        label: "Penalty FTs %",  tooltip: "Penalty FTs % \u2014 share from non-shooting fouls: techs, flagrants, clear path, take fouls, away-from-play, bonus fouls", fmt: "pct" },
     { key: "fp_penalty_n",      label: "Penalty FTs",    tooltip: "Penalty FTs count", fmt: "int" },
     { key: "and1_rate",         label: "And-1 Rate",     tooltip: "And-1 Rate \u2014 percentage of made field goals that resulted in an And-1", fmt: "pct" },
-    { key: "foul_draw_rate",    label: "Foul Draw Rate", tooltip: "Foul Draw Rate \u2014 percentage of scoring possessions that involved a foul", fmt: "pct" },
+    { key: "foul_draw_rate",    label: "SP Foul Rate", tooltip: "SP Foul Rate \u2014 percentage of scoring possessions that involved a foul", fmt: "pct" },
     { key: "_bar",              label: "Distribution",   tooltip: "Visual breakdown \u2014 blue = clean 2PT, green = clean 3PT, orange = 2PT SF, yellow = 3PT SF, purple = And-1s, gray = penalty FTs", sortable: false, fmt: "bar" },
   ],
 
