@@ -530,6 +530,24 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 .about-subtab-bar button.active { color: #c9d1d9; border-bottom-color: #58a6ff; }
 .about-subtab-pane { display: none; }
 .about-subtab-pane.active { display: block; }
+.faq-list { max-width: 800px; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item summary {
+  cursor: pointer; padding: 14px 0; font-size: 14px; font-weight: 600;
+  color: #c9d1d9; list-style: none; display: flex; align-items: center;
+}
+.faq-item summary::before {
+  content: "+"; display: inline-block; width: 20px; font-size: 16px;
+  color: #58a6ff; margin-right: 10px; flex-shrink: 0; text-align: center;
+}
+.faq-item[open] summary::before { content: "\2212"; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item p {
+  margin: 0 0 14px 30px; font-size: 13.5px; line-height: 1.65;
+  color: #8b949e;
+}
+.faq-item a { color: #58a6ff; text-decoration: none; }
+.faq-item a:hover { text-decoration: underline; }
 .chart-pane { display: none; }
 .chart-pane.active { display: block; }
 .chart-help-toggle {
@@ -761,6 +779,7 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
   <button data-subtab="methodology">Methodology</button>
   <button data-subtab="historical">Historical Evidence</button>
   <button data-subtab="crossera">Cross-Era Comparison</button>
+  <button data-subtab="faq">FAQ</button>
 </div>
 
 <div class="about-subtab-pane active" id="subtab-the-problem">
@@ -789,7 +808,7 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 <p><strong>The 0.44 is a problem. It is not the problem.</strong></p>
 <p>The 0.44 contributes +0.34pp of error on average. The &ldquo;2&rdquo; contributes approximately 9-10pp. The part people criticize is roughly 30 times smaller than the less discussed structural flaw. Both figures are derived from the play-by-play and box score data on this site.</p>
 
-<h2>Problem 2 (Fatal): The &ldquo;2&rdquo; in the Denominator</h2>
+<h2 id="problem-the-2">Problem 2 (Fatal): The &ldquo;2&rdquo; in the Denominator</h2>
 <p>The standard formula divides everything by <code>2 &times; (FGA + 0.44 &times; FTA)</code>. This means every attempt is treated as if its maximum value is 2 points. A player who scores 20 points on 20 attempts gets 20/40 = 50%. That works fine for 2-pointers, but a 3-pointer is worth more than 2.</p>
 <h3>Example Box Scores</h3>
 <p>Pure Shooting % uses a different formula: <code>PTS / (2&times;FGA + 3PA + FTA)</code>. The full derivation is on the Methodology tab. Here is how the two formulas compare on simple examples.</p>
@@ -868,7 +887,7 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 </tbody>
 </table>
 
-<h2>The Relationship Is Structural</h2>
+<h2 id="relationship-structural">The Relationship Is Structural</h2>
 <p>Across all 47 seasons, 3-point attempt rate explains 99.86% of the variance in the distortion between TS% and PS% (R&sup2; = 0.9986). The relationship follows: Delta = -0.91 + (-0.208 &times; 3PA Rate). Every 1 percentage point increase in league 3PA rate widens the gap by approximately 0.21 percentage points.</p>
 <p>At the current league 3PA rate of ~42%, the average distortion is approximately 9.7 percentage points. If the league reaches 50% 3PA rate, the distortion would exceed 11 percentage points. The gap is not stabilizing. It is growing.</p>
 <p>This means TS% systematically overrates players who shoot more 3-pointers and underrates those who don&rsquo;t. Two players with identical actual shooting efficiency will receive different TS% scores if one takes more 3-pointers than the other. PS% eliminates this bias entirely: a player&rsquo;s score depends only on how many of their available points they actually scored, regardless of where they shot from.</p>
@@ -890,7 +909,7 @@ tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
 <p>This is not a model or an approximation. If the question is &ldquo;what percentage of available points did a player score,&rdquo; there is only one calculation that answers it: total points divided by total possible points. The data to compute this has always been on every standard box score. No play-by-play parsing, no estimated coefficients, no arbitrary weights required.</p>
 <p>For reference, TS% uses: <code>PTS / (2 &times; (FGA + 0.44 &times; FTA))</code>. PS% is simpler, more precise, and a true percentage.</p>
 
-<h2>Where The Formula Comes From</h2>
+<h2 id="formula-derivation">Where The Formula Comes From</h2>
 <p>There are only three ways to score in basketball. Each has a known maximum value per attempt:</p>
 <table class="about-table">
 <thead><tr><th>Attempt Type</th><th>Max Points</th><th>Existing Stat</th></tr></thead>
@@ -992,6 +1011,91 @@ Unsimplified formula: PS% = (2&times;2PM + 3&times;3PM + FTM) / (2&times;2PA + 3
 </table>
 
 </div><!-- /subtab-crossera -->
+
+<div class="about-subtab-pane" id="subtab-faq">
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-list">
+
+<details class="faq-item">
+<summary>Isn't PS% just FG% with extra steps?</summary>
+<p>No. FG% is field goals made divided by field goals attempted. It counts every shot the same regardless of whether it was a 2 or a 3, and it excludes free throws entirely. PS% uses the actual point value of each attempt: a 2-point attempt adds 2 to the denominator, a 3-point attempt adds 3, a free throw adds 1. That accounts for both 3-pointers and free throws in one stat.</p>
+</details>
+
+<details class="faq-item">
+<summary>Why does PS% treat 50% on 2s the same as 50% on 3s when one produces more points?</summary>
+<p>Because those two outcomes represent identical conversion efficiency: the player converted the same share of the shots they took. The player shooting 3s produced more points per attempt because they chose higher-value shots. That is a difference in shot selection, not a difference in shooting efficiency.</p>
+<p>For example, a player going 4-for-8 on 2-pointers (8 points out of a possible 16) has 50% PS%. A player going 4-for-8 on 3-pointers (12 points out of a possible 24) also has 50% PS%. Both converted the same share of their available points. PS% isolates conversion; points-per-attempt stats capture raw output; 3PA rate captures shot selection. Together they provide the full picture.</p>
+</details>
+
+<details class="faq-item">
+<summary>Isn't TS% just a percentage relative to a 2-point baseline? Why is it a problem that it can exceed 100%?</summary>
+<p>If TS% is a value relative to a 2-point baseline, then it is a rate, not a percentage. Rates can exceed any reference value, so 150% is mathematically fine as a rate. But TS% is called &ldquo;True Shooting Percentage&rdquo; and is presented alongside FG%, 3P%, and FT%, which are all real proportions bounded at 0&ndash;100%. That framing mismatch is a problem on its own.</p>
+<p>The deeper problem is structural. The 2-point baseline means every 3-point attempt is measured against a ceiling of 2 instead of 3. This creates a systematic bias that inflates 3-point shooters relative to interior scorers, correlated with 3PA rate at R&sup2; = 0.9986 across 47 seasons (see <a href="javascript:void(0)" onclick="goToSection('the-problem','relationship-structural')">The Relationship Is Structural</a>). An R&sup2; of 1.0 would mean 3PA rate perfectly predicts the gap; 0.9986 means it explains nearly all of it. Two players with identical conversion efficiency receive different TS% scores based purely on their 3PA rate. That is not a naming issue; it is a denominator that does not match the actual point values of different shot types. PS% corrects this by using the actual maximum value of each attempt instead of a flat 2.</p>
+</details>
+
+<details class="faq-item">
+<summary>Does PS% tell you who the best scorer is?</summary>
+<p>No, and it is not trying to. PS% measures conversion of available points across the shots a player took. It does not capture volume, does not reward shot selection in the output number, and does not account for creation or defensive attention. PS% is most informative when used alongside stats like PPG, 3PA rate, and usage to build a complete picture. 3P% is rarely used in isolation to rank shooters for the same reason: it is a component stat, not a complete grade.</p>
+</details>
+
+<details class="faq-item">
+<summary>Is PS% better than TS%?</summary>
+<p>At what both stats are trying to do, yes. Both aim to provide a single shooting efficiency percentage that accounts for 2-pointers, 3-pointers, and free throws. PS% does this correctly: bounded at 0&ndash;100%, no arbitrary coefficients, no structural bias by shot type. TS% attempts the same thing, but its denominator treats every field goal attempt as worth a maximum of 2 points (see <a href="javascript:void(0)" onclick="goToSection('the-problem','problem-the-2')">Problem 2: The &ldquo;2&rdquo;</a>). That produces unintended results with 3-point attempts and allows outputs above 100%.</p>
+<p>PS% is the replacement for TS% as a shooting efficiency percentage. It is not a replacement for PPP, offensive rating, or any possession-level stat. Those answer a different question (how efficiently does a player use possessions?) and complement PS% rather than competing with it. For possession-level efficiency, PPP is the appropriate tool. For a shooting percentage, PS% is the correct one.</p>
+</details>
+
+<details class="faq-item">
+<summary>What does &ldquo;maximum possible points&rdquo; mean, and why does PS% use it as the denominator?</summary>
+<p>Maximum possible points is the sum of the max values of the shots the player took. A 2-point shot, a 3-point shot, and a free throw together have a max possible of 2+3+1 = 6. This is not a counterfactual; it is the ceiling on what those exact attempts could have produced under the rules of basketball.</p>
+<p>Every shooting percentage works this way. FG% measures makes against max possible makes. FT% measures free throw makes against max possible free throw makes. &ldquo;Max possible&rdquo; is not a PS%-specific invention; it is how every shooting percentage has always been defined. PS% extends the same logic to all shot types combined (see <a href="javascript:void(0)" onclick="goToSection('methodology','formula-derivation')">Where The Formula Comes From</a>).</p>
+</details>
+
+<details class="faq-item">
+<summary>Doesn't PS% discard scoring output information by treating 2s and 3s the same?</summary>
+<p>PS% separates conversion from value. The value of a 3-pointer is still present: it adds 3 to the denominator, not 2. In TS%, a 3-point attempt only adds 2 to the denominator (via the FGA term), while it adds 3 to the numerator when made. That asymmetry is what causes TS% to exceed 100%. In PS%, a 3-point attempt adds 3 to both the numerator (when made) and the denominator, keeping the ratio bounded as a true proportion.</p>
+<p>What PS% does not do is inflate the output when players choose higher-value shots. That is a shot selection decision, not a shooting efficiency question. Shot selection is captured by 3PA rate; raw output is captured by points-per-attempt stats. They exist as separate stats for exactly this reason.</p>
+</details>
+
+<details class="faq-item">
+<summary>What about PPP, offensive rating, or PPS? Aren't those better?</summary>
+<p>Those stats answer different questions and are not in competition with PS%. PPP (points per possession) and offensive rating capture possession-level efficiency, including turnovers and non-scoring possessions. PPS (points per shot) captures raw scoring output per field goal attempt; note that standard PPS is FG-only and does not include free throws. PS% captures what percentage of available points a player converted on their scoring attempts, the same thing FG% and 3P% measure for individual shot types, extended to all shot types combined.</p>
+<p>None of those stats produce a bounded 0&ndash;100% conversion percentage that works consistently across player archetypes and eras. That is the specific role PS% fills, the role TS% was intended to fill but does not, because its denominator uses a fixed ceiling that does not match the actual point values of different shot types (see <a href="javascript:void(0)" onclick="goToSection('the-problem','problem-the-2')">Problem 2: The &ldquo;2&rdquo;</a>). For possession efficiency, PPP is the appropriate tool. For a shooting percentage, PS% is the correct one.</p>
+</details>
+
+<details class="faq-item">
+<summary>Why doesn't PS% account for shot difficulty or defender proximity?</summary>
+<p>PS% is a box-score-derived stat, and those inputs are not in the box score. Shot quality, defender distance, shot clock, and contested vs open are all valuable dimensions, but they require tracking data (Second Spectrum, NBA stats) not available in standard box scores. The base PS% stat is intentionally simple: four box score numbers, no modeling. A shot-quality-adjusted extension is a natural next step. PS% is a floor, not a ceiling.</p>
+</details>
+
+<details class="faq-item">
+<summary>Is PS% trying to replace PER, Win Shares, BPM, or RAPM?</summary>
+<p>No. Those are composite impact metrics that try to capture all-around contribution in a single number. PS% is a single-dimension shooting efficiency stat, a different category entirely. PS% would be an input to a composite metric, not a replacement for one.</p>
+<p>Worth noting: several of these composite metrics use TS% or the 0.44 FTA coefficient as an input. PER inherits the 0.44 directly in its scoring terms. BPM uses TS% in its scoring efficiency component. To the extent that TS% is structurally flawed, composite metrics built on it inherit that distortion. Examining those downstream effects is a natural area for further research.</p>
+</details>
+
+<details class="faq-item">
+<summary>If PS% is so simple, why hasn't anyone done this before?</summary>
+<p>The formula is trivially simple, and that is partly why it was overlooked. People assumed TS% must be doing something more sophisticated. The 0.44 coefficient is a carefully considered approximation for a real problem (possessions consumed by free throws), and it is remarkably close to correct across large samples, with a mean error of less than half a percentage point. That accuracy has made the 0.44 the main focus of critique and refinement around TS%, which left the underlying denominator structure, the fixed 2-point baseline, largely unexamined.</p>
+<p>The <a href="javascript:void(0)" onclick="goToSection('methodology','formula-derivation')">full derivation</a> uses only one identity: 2PA = FGA &minus; 3PA. That single substitution converts the intuitive formula (2&times;2PA + 3&times;3PA + FTA) into the box-score formula (2&times;FGA + 3PA + FTA). The NBA analytics community has been focused on possession-based metrics (PPP, offensive rating) rather than revisiting the percentage-based stat that most fans and media actually reference.</p>
+</details>
+
+<details class="faq-item">
+<summary>Don't coaches and front offices already know TS% is imperfect? Does this matter in practice?</summary>
+<p>Sophisticated analysts typically use PPP or proprietary internal metrics. But TS% is the stat that appears on Basketball Reference, ESPN, and NBA broadcasts. It is the efficiency number most fans, media, and some front office staff reference in player comparisons. Getting the public-facing stat right matters because it shapes narratives about who is efficient, who is not, and how to compare players across eras.</p>
+<p>TS% is also used as an input in other widely cited metrics (PER, BPM), which means its structural issues propagate beyond the single number. Correcting the base stat has implications for any composite metric built on top of it.</p>
+</details>
+
+<details class="faq-item">
+<summary>Doesn't the 3PA term in the denominator penalize 3-point shooters by giving them a higher bar to clear?</summary>
+<p>It is not a penalty; it is accurate accounting. A 3-point attempt can produce 3 points, so the ceiling for that attempt is 3. Measuring the player against that ceiling is exactly right. The alternative, which is what TS% does by effectively capping the denominator at 2 per attempt, gives 3-point shooters credit for exceeding a ceiling that was set too low.</p>
+<p>Consider a player who takes 8 two-point shots and 3 three-point shots (11 total FGA). The 2&times;FGA term gives 2&times;11 = 22 max points, treating all 11 shots as worth 2. The +3PA term then adds 3 (one extra point for each 3-point attempt), bringing the max to 25. That correctly accounts for 3-pointers being worth 3 instead of 2 (see <a href="javascript:void(0)" onclick="goToSection('methodology','formula-derivation')">the derivation</a>). PS% treats every attempt symmetrically in numerator and denominator, which is what makes it a real percentage rather than a rate that can exceed 100%.</p>
+</details>
+
+</div>
+
+</div><!-- /subtab-faq -->
 
 </div>
 </div>
@@ -2229,6 +2333,14 @@ document.getElementById("aboutSubtabBar").addEventListener("click", function(e) 
   document.querySelectorAll(".about-subtab-pane").forEach(function(d) { d.classList.remove("active"); });
   document.getElementById("subtab-" + btn.dataset.subtab).classList.add("active");
 });
+
+function goToSection(subtab, anchorId) {
+  document.querySelectorAll(".about-subtab-bar button").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelector('.about-subtab-bar button[data-subtab="' + subtab + '"]').classList.add("active");
+  document.querySelectorAll(".about-subtab-pane").forEach(function(d) { d.classList.remove("active"); });
+  document.getElementById("subtab-" + subtab).classList.add("active");
+  setTimeout(function() { document.getElementById(anchorId).scrollIntoView({behavior:"smooth"}); }, 50);
+}
 
 // =====================================================================
 // SECTION 18: SEASON SELECTOR
