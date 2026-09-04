@@ -45,7 +45,8 @@ def discover_seasons(data_dir):
         # Extract base year for sorting; PO sorts after RS for same year
         base = s.replace("-PO", "")
         is_po = s.endswith("-PO")
-        return (base, is_po)
+        # Negate is_po so RS (False→1) sorts before PO (True→0) under reverse=True
+        return (base, not is_po)
 
     # Sort by year descending, RS before PO within same year
     return sorted(seasons, key=sort_key, reverse=True)
