@@ -61,6 +61,7 @@ SEASONS = [
     ("2022-23", "NBA_2023"),
     ("2023-24", "NBA_2024"),
     ("2024-25", "NBA_2025"),
+    ("2025-26", "NBA_2026"),
 ]
 
 # Team name → abbreviation mapping
